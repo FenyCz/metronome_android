@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Metronome</string>
+    <string name="tab_text_1">METRONOME</string>
+    <string name="tab_text_2">PLAYLIST</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment2">This is playlist</string>
+
+    <!-- Layout metronome -->
+    <string name="button_play">PLAY</string>
+    <string name="button_plus">+5</string>
+    <string name="button_minus">-5</string>
+    <string name="button_bar">4/4</string>
+    <string name="button_beats">1</string>
+    <string name="text_tempo">150</string>
+
+    <string-array name="Playlist">
+        <item>Bouře</item>
+        <item>Naděje</item>
+        <item>Doufám</item>
+        <item>Odcházím</item>
+        <item>Tvarohová</item>
+        <item>Florka</item>
+        <item>Ilu</item>
+    </string-array>
+</resources>
