@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".Metronome">
 
     <EditText
@@ -14,10 +16,11 @@
         android:elevation="4dp"
         android:ems="10"
         android:inputType="number"
-        android:text="@string/text_tempo"
+        android:text=""
         android:textSize="30sp"
         android:textStyle="bold"
         android:textAlignment="center"
+        android:maxLength="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -96,16 +99,16 @@
         app:indicator_color="#0B3C49"
         app:indicator_width="10"
         app:is_continuous="true"
-        app:label="false"
+        app:label=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:main_circle_color="#FFFFFF"
-        app:max="1000"
+        app:max="300"
         app:progress_primary_circle_size="150"
         app:progress_primary_color="#0B3C49"
         app:progress_secondary_color="#EEEEEE"
-        app:start_offset="25" />
+        app:start_offset="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
