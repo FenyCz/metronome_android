@@ -15,8 +15,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sdsmdg.harjot.crollerTest.Croller;
 
@@ -24,7 +28,7 @@ import com.sdsmdg.harjot.crollerTest.Croller;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Metronome.OnFragmentInteractionListener} interface
+ * {link Metronome.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link Metronome#newInstance} factory method to
  * create an instance of this fragment.
@@ -44,6 +48,7 @@ public class Metronome extends Fragment {
     //circural seek bar
     private Croller croller;
     private TextView bpmText;
+    private Spinner accentSpinner;
     private Button buttonPlus;
     private Button minusButton;
     String current;
@@ -56,8 +61,8 @@ public class Metronome extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * param param1 Parameter 1.
+     * param param2 Parameter 2.
      * @return A new instance of fragment Metronome.
      */
     // TODO: Rename and change types and number of parameters
@@ -76,19 +81,24 @@ public class Metronome extends Fragment {
         //default
         super.onCreate(savedInstanceState);
 
-        //options
+        //enable options
         setHasOptionsMenu(true);
+
+
     }
 
+    //action buttons
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        inflater.inflate(R.menu.main_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        //menu.clear();
+        inflater.inflate(R.menu.main_menu, menu);
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         final int increase = 5;
@@ -102,8 +112,33 @@ public class Metronome extends Fragment {
         croller.setProgress(100); //default number of seek bar
         croller.setMin(1);
 
+        // accent spinner
+        /*accentSpinner = view.findViewById(R.id.accent_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
+                R.array.accents_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        accentSpinner.setAdapter(adapter);
+        accentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch(1){
+                    case 0:
+                        View childLayout = inflater.inflate(R.layout.accents, container, false);
+                        view.addView()
+                        break;
+                    case 1:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });*/
+
         // button +5 change bpm number
-        buttonPlus = (Button) view.findViewById(R.id.button3);
+        buttonPlus = view.findViewById(R.id.button3);
         buttonPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +152,7 @@ public class Metronome extends Fragment {
         });
 
         // button -5 change bpm number
-        minusButton = (Button) view.findViewById(R.id.button2);
+        minusButton = view.findViewById(R.id.button2);
         minusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,7 +194,7 @@ public class Metronome extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         //circular seek bar
-        croller = (Croller) getView().findViewById(R.id.croller);
+        croller = getView().findViewById(R.id.croller);
         croller.setOnProgressChangedListener(new Croller.onProgressChangedListener() {
             @Override
             public void onProgressChanged(int progress) {

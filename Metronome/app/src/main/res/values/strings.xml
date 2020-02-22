@@ -13,6 +13,14 @@
     <string name="button_bar">4/4</string>
     <string name="button_beats">1</string>
     <string name="text_tempo">150</string>
+    <string name="start">‎▶</string>
+    <string name="stop">■</string>
+
+    <!--Main menu-->
+
+    <string name="action_settings">Settings</string>
+    <string name="action_bluetooth">Bluetooth</string>
+    <string name="action_save">Save</string>
 
     <string-array name="Playlist">
         <item>Bouře</item>
@@ -23,4 +31,17 @@
         <item>Florka</item>
         <item>Ilu</item>
     </string-array>
+
+    <!--Number of accent circles-->
+    <string-array name="accents_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
 </resources>
