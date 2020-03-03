@@ -6,8 +6,11 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.metronome.*;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -22,6 +25,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.metronome.databinding.FragmentMetronomeBinding;
+import com.example.metronome.model.Model;
+import com.example.metronome.viewModel.ViewModel;
 import com.sdsmdg.harjot.crollerTest.Croller;
 
 
@@ -53,6 +59,15 @@ public class Metronome extends Fragment {
     private Button minusButton;
     String current;
 
+    //databinding
+    private FragmentMetronomeBinding fragmentMetronomeBinding;
+
+    // Model
+    private Model mData;
+
+    // ViewModel
+    private ViewModel mViewModel;
+
     public Metronome() {
         // Required empty public constructor
     }
@@ -83,8 +98,6 @@ public class Metronome extends Fragment {
 
         //enable options
         setHasOptionsMenu(true);
-
-
     }
 
     //action buttons
@@ -98,19 +111,39 @@ public class Metronome extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mViewModel = new ViewModelProvider(this).get(ViewModel.class);
+    }
+
+    @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         final int increase = 5;
 
+        //databinding activating
+        fragmentMetronomeBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_metronome,container,false);
+        View view = fragmentMetronomeBinding.getRoot();
+
         //circural seek bar
-        View view =  inflater.inflate(R.layout.fragment_metronome, container, false);
+        //View view =  inflater.inflate(R.layout.fragment_metronome, container, false);
         croller = view.findViewById(R.id.croller);
         bpmText = view.findViewById(R.id.editText2);
 
-        croller.setMax(300); //max number
-        croller.setProgress(100); //default number of seek bar
-        croller.setMin(1);
+        mData = new Model();
+        mData.setBpm(100);
+
+
+        //TODO : continue here
+        try {
+            mViewModel = new ViewModel(this, mData);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        fragmentMetronomeBinding.setViewModel(mViewModel);
 
         // accent spinner
         /*accentSpinner = view.findViewById(R.id.accent_spinner);
@@ -137,6 +170,8 @@ public class Metronome extends Fragment {
             }
         });*/
 
+
+        // TODO : pridat do viewmodelu
         // button +5 change bpm number
         buttonPlus = view.findViewById(R.id.button3);
         buttonPlus.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +228,8 @@ public class Metronome extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        //TODO: pridat do viewmodelu
         //circular seek bar
         croller = getView().findViewById(R.id.croller);
         croller.setOnProgressChangedListener(new Croller.onProgressChangedListener() {
@@ -203,42 +240,13 @@ public class Metronome extends Fragment {
         });
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    /*public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-    }*/
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    /*public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }*/
+    }
 }

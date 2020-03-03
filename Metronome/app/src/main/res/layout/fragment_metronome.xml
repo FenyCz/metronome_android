@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    >
+
+<data>
+    <import type="com.example.metronome.viewModel.ViewModel" />
+    <variable
+        name="viewModel"
+        type="com.example.metronome.viewModel.ViewModel"/>
+</data>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
@@ -25,7 +38,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_horizontal" />
 
     <Spinner
         android:id="@+id/accent_spinner"
@@ -62,10 +76,12 @@
         android:textOn="@string/stop"
         android:textSize="30sp"
         android:textAlignment="center"
+        android:onClick="@{() -> viewModel.playSound()}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button3"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button2" />
+        app:layout_constraintStart_toEndOf="@+id/button2"
+        android:gravity="center_horizontal" />
 
     <Button
         android:id="@+id/button2"
@@ -110,6 +126,8 @@
         app:progress_primary_circle_size="150"
         app:progress_primary_color="#0B3C49"
         app:progress_secondary_color="#EEEEEE"
-        app:start_offset="1" />
+        app:start_offset="1"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

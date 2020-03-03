@@ -17,6 +17,7 @@ import android.widget.Toolbar;
 
 import com.example.metronome.ui.main.SectionsPagerAdapter;
 
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
