@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
 
 <data>
-    <import type="com.example.metronome.viewModel.ViewModel" />
+    <import type="com.example.metronome.viewModel.MetronomeViewModel" />
     <variable
-        name="viewModel"
-        type="com.example.metronome.viewModel.ViewModel"/>
+        name="mViewModel"
+        type="com.example.metronome.viewModel.MetronomeViewModel"/>
 </data>
-
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -21,26 +19,40 @@
     android:focusableInTouchMode="true"
     tools:context=".Metronome">
 
+    <LinearLayout
+        android:id="@+id/con_layout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        tools:ignore="MissingConstraints">
+    </LinearLayout>
+
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/label"
         android:layout_width="70dp"
         android:layout_height="54dp"
+        android:autofillHints=""
+        android:background="@android:color/transparent"
+        android:cursorVisible="false"
+        android:elevation="4dp"
         android:ems="10"
-        android:inputType="number"
-        android:text="@string/text_tempo"
+        android:focusable="false"
+        android:gravity="center_horizontal"
+        android:hint=""
+        android:inputType="none"
+        android:maxLength="3"
+        android:onTextChanged="@{(cs,x,y,z) -> mViewModel.textChangeBpm(cs)}"
+        android:text="@={`` + mViewModel.data.bpm}"
+        android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:textAlignment="center"
-        android:maxLength="3"
-        android:autofillHints=""
-        android:elevation="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center_horizontal" />
-
+        app:layout_constraintBottom_toBottomOf="@+id/croller"
+        app:layout_constraintEnd_toEndOf="@+id/croller"
+        app:layout_constraintStart_toStartOf="@+id/croller"
+        app:layout_constraintTop_toTopOf="@+id/croller" />
+    <!--android:textChangeBpm="@{(cs, x, y, z) -> mViewModel.textChangeBpm(cs)}"-->
     <Spinner
         android:id="@+id/accent_spinner"
         android:layout_width="71dp"
@@ -51,83 +63,91 @@
         android:text="@string/button_bar"
         android:textSize="30sp"
         android:background="@color/colorWhite"
-        app:layout_constraintBottom_toTopOf="@+id/editText2"
+        app:layout_constraintBottom_toTopOf="@+id/label"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/button_repeat"
         android:layout_width="71dp"
         android:layout_height="60dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="50dp"
         android:text="@string/button_beats"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/editText2"
+        android:onClick="@{() -> mViewModel.buttonTapBpm()}"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/label"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ToggleButton
         android:id="@+id/start_button"
-        android:layout_width="105dp"
-        android:layout_height="71dp"
-        android:layout_marginBottom="24dp"
-        android:text="@string/button_play"
+        android:layout_width="180dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal"
+        android:onClick="@{()-> mViewModel.playButtonClick()}"
+        android:textAlignment="center"
         android:textOff="@string/start"
         android:textOn="@string/stop"
-        android:textSize="30sp"
-        android:textAlignment="center"
-        android:onClick="@{() -> viewModel.playSound()}"
+        android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintEnd_toStartOf="@+id/button_plus"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button2"
-        android:gravity="center_horizontal" />
+        app:layout_constraintStart_toEndOf="@+id/button_minus" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button_minus"
         android:layout_width="71dp"
         android:layout_height="60dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginBottom="24dp"
+        android:onClick="@{() -> mViewModel.buttonChangeBpm(-5)}"
         android:text="@string/button_minus"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button4"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/button_plus"
         android:layout_width="65dp"
         android:layout_height="60dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:layout_marginBottom="24dp"
+        android:onClick="@{() -> mViewModel.buttonChangeBpm(+5)}"
         android:text="@string/button_plus"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button4" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.sdsmdg.harjot.crollerTest.Croller
         android:id="@+id/croller"
-        android:layout_width="270dp"
-        android:layout_height="270dp"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
         android:layout_centerInParent="true"
         app:back_circle_color="#EDEDED"
-        app:indicator_color="#0B3C49"
-        app:indicator_width="10"
+        app:indicator_color="#FFFFFF"
+        app:indicator_width="1"
         app:is_continuous="true"
-        app:label=""
+        app:progress_primary_stroke_width="20"
+        app:progress_secondary_stroke_width="5"
+        app:progress_primary_color="#0B3C49"
+        app:progress_secondary_color="#EEEEEE"
+        app:label="BPM"
+        app:label_color="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:main_circle_color="#FFFFFF"
+        app:main_circle_radius="320"
+        app:back_circle_radius="370"
         app:max="300"
-        app:progress_primary_circle_size="150"
-        app:progress_primary_color="#0B3C49"
-        app:progress_secondary_color="#EEEEEE"
-        app:start_offset="1"
+        app:start_offset="10"
         />
-
+    <!--app:progress="@{mViewModel.data.bpm}"-->
+    <!--        app:main_circle_radius="150"
+        app:back_circle_radius="170"-->
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -11,7 +11,7 @@
     <string name="button_plus">+5</string>
     <string name="button_minus">-5</string>
     <string name="button_bar">4/4</string>
-    <string name="button_beats">1</string>
+    <string name="button_beats">TAP</string>
     <string name="text_tempo">150</string>
     <string name="start">‎▶</string>
     <string name="stop">■</string>

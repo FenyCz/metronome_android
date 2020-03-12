@@ -7,26 +7,31 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.ObservableField;
+import androidx.databinding.adapters.SeekBarBindingAdapter;
 import androidx.databinding.library.baseAdapters.BR;
+
+import com.sdsmdg.harjot.crollerTest.Croller;
 
 
 public class Model extends BaseObservable implements Parcelable {
 
-    protected static final int MIN = 1;
-    protected static final int MAX = 300;
-
     private int songDatabaseId;
     private int bpm;
+    private int seekValue;
     private long freq;
     private String songName = "";
     private String accentArr = "";
     private int countOfBeats = 0;
     private String soundName = "";
     private int ordNumb = -1;
+    private long timee;
+    private int nTouch = 2;
+    private boolean accent = false;
 
     //constructor
     public Model(){
-
     }
 
     //funkce pro parcelování
@@ -54,16 +59,24 @@ public class Model extends BaseObservable implements Parcelable {
 
     //nastavení BPM, hlídá povolené meze
     public void setBpm(@NonNull int bpm) {
-        if (bpm < MIN ){
-            bpm = MIN;
+        if (bpm < 1 ){
+            bpm = 1;
         }
-        else if(bpm > MAX){
-            bpm = MAX;
+        else if(bpm > 300){
+            bpm = 300;
         }
         this.bpm = bpm;
         this.newBpmToFreq();
         notifyPropertyChanged(BR.bpm);
     }
+
+    public void setSeekValue(){
+        this.seekValue = getBpm();
+        notifyPropertyChanged(BR.seekValue);
+    }
+
+    @Bindable
+    public int getSeekValue(){ return this.seekValue; }
 
     //pomocna funkce bpm -> freq
     public void newBpmToFreq(){
@@ -71,6 +84,19 @@ public class Model extends BaseObservable implements Parcelable {
     }
 
     //gettry a settry
+
+    public void setAccent(boolean accent){ this.accent = accent; }
+
+    public boolean getAccent(){ return this.accent; }
+
+    public void setNTouch(int touch){ this.nTouch += touch; }
+
+    public long getNTouch() { return this.nTouch; }
+
+    public void setTimee(long time){ this.timee = time; }
+
+    public long getTimee() { return this.timee; }
+
     @Bindable
     public long getFreq() {
         return this.freq;

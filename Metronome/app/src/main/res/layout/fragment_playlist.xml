@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+<data>
+    <import type="com.example.metronome.viewModel.MetronomeViewModel" />
+    <variable
+        name="mViewModel"
+        type="com.example.metronome.viewModel.MetronomeViewModel"/>
+</data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,10 +37,12 @@
         android:layout_marginBottom="124dp"
         android:autofillHints=""
         android:elevation="4dp"
+        android:cursorVisible="false"
+        android:focusable="false"
         android:ems="10"
-        android:inputType="number"
-        android:text="@string/text_tempo"
-        android:textAlignment="center"
+        android:inputType="none"
+        android:background="@android:color/transparent"
+        android:gravity="center_horizontal"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,19 +51,19 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ToggleButton
-    android:id="@+id/button4"
-    android:layout_width="105dp"
-    android:layout_height="71dp"
-    android:layout_marginBottom="24dp"
-    android:text="@string/button_play"
-    android:textOff=" ‎▶"
-    android:textOn="■"
-    android:textSize="30sp"
-    android:textAlignment="center"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toStartOf="@+id/button3"
-    app:layout_constraintHorizontal_bias="0.5"
-    app:layout_constraintStart_toEndOf="@+id/button2" />
+        android:id="@+id/button4"
+        android:layout_width="105dp"
+        android:layout_height="71dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/button_play"
+        android:textOff=" ‎▶"
+        android:textOn="■"
+        android:textSize="30sp"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button2"  />
 
     <Button
         android:id="@+id/button2"
@@ -103,3 +116,4 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
