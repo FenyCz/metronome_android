@@ -16,22 +16,22 @@
     android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Playlist">
+    tools:context=".fragment.PlaylistFragment">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_minus_playlist"
         android:layout_width="71dp"
         android:layout_height="60dp"
         android:layout_marginBottom="124dp"
         android:text="@string/button_minus"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button4"
+        app:layout_constraintEnd_toStartOf="@+id/playlist_tempo"
         app:layout_constraintHorizontal_bias="0.788"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/playlist_tempo"
         android:layout_width="70dp"
         android:layout_height="54dp"
         android:layout_marginBottom="124dp"
@@ -51,7 +51,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ToggleButton
-        android:id="@+id/button4"
+        android:id="@+id/start_button_playlist"
         android:layout_width="105dp"
         android:layout_height="71dp"
         android:layout_marginBottom="24dp"
@@ -61,24 +61,24 @@
         android:textSize="30sp"
         android:gravity="center_horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintEnd_toStartOf="@+id/button_next"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button2"  />
+        app:layout_constraintStart_toEndOf="@+id/button_previous"  />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button_previous"
         android:layout_width="71dp"
         android:layout_height="60dp"
         android:layout_marginBottom="24dp"
         android:text="◁"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button4"
+        app:layout_constraintEnd_toStartOf="@+id/start_button_playlist"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/button_next"
         android:layout_width="65dp"
         android:layout_height="60dp"
         android:layout_marginBottom="24dp"
@@ -87,7 +87,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button4" />
+        app:layout_constraintStart_toEndOf="@+id/start_button_playlist" />
 
     <Button
         android:id="@+id/button7"
@@ -99,21 +99,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.129"
-        app:layout_constraintStart_toEndOf="@+id/button4" />
-
-    <ListView
-        android:id="@+id/PlaylistList"
-        android:layout_width="322dp"
-        android:layout_height="272dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/start_button_playlist" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

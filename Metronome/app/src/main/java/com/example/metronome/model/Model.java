@@ -11,13 +11,13 @@ import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableField;
 import androidx.databinding.adapters.SeekBarBindingAdapter;
 import androidx.databinding.library.baseAdapters.BR;
+import androidx.room.Ignore;
 
 import com.sdsmdg.harjot.crollerTest.Croller;
 
-
 public class Model extends BaseObservable implements Parcelable {
 
-    private int songDatabaseId;
+    private int id;
     private int bpm;
     private int seekValue;
     private long freq;
@@ -42,7 +42,7 @@ public class Model extends BaseObservable implements Parcelable {
         accentArr = in.readString();
         countOfBeats = in.readInt();
         soundName = in.readString();
-        songDatabaseId = in.readInt();
+        id = in.readInt();
     }
 
     public static Creator<Model> CREATOR = new Creator<Model>() {
@@ -118,7 +118,7 @@ public class Model extends BaseObservable implements Parcelable {
 
     public int getOrdNumb() {return this.ordNumb;}
 
-    public int getSongDatabaseId(){return this.songDatabaseId;}
+    public int getId(){return this.id;}
 
     public void setOrdNumb(int ordNumb){ this.ordNumb = ordNumb;}
 
@@ -128,7 +128,7 @@ public class Model extends BaseObservable implements Parcelable {
 
     public void setCountOfBeats(int countOfBeats) {this.countOfBeats = countOfBeats;}
 
-    public void setSongDatabaseId(int songDatabaseId) {this.songDatabaseId = songDatabaseId;}
+    public void setId(int id) {this.id = id;}
 
     public  void setSongName(String songName) {
         this.songName = songName;
@@ -147,6 +147,6 @@ public class Model extends BaseObservable implements Parcelable {
         dest.writeString(accentArr);
         dest.writeInt(countOfBeats);
         dest.writeString(soundName);
-        dest.writeInt(songDatabaseId);
+        dest.writeInt(id);
     }
 }

@@ -17,7 +17,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".Metronome">
+    tools:context=".fragment.MetronomeFragment">
 
     <LinearLayout
         android:id="@+id/con_layout"

@@ -1,61 +1,60 @@
 package com.example.metronome;
 
-import android.content.Context;
-import android.net.Uri;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+
 import android.os.Bundle;
+import android.util.Log;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import com.example.metronome.model.Model;
 
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
-
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
-
-public class Playlist extends Fragment {
-
-    public Playlist() {
-        // Required empty public constructor
-    }
-
-    public static Playlist newInstance() {
-        Playlist fragment = new Playlist();
-        //Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        //fragment.setArguments(args);
-        return fragment;
-    }
+public class Playlist extends AppCompatActivity {
+    private RecyclerView mRecycleView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setContentView(R.layout.activity_playlist);
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        mRecycleView = findViewById(R.id.recyclerview_list);
 
-        inflater.inflate(R.menu.main_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+        /*SongDatabase db = Room.databaseBuilder(getApplicationContext(), SongDatabase.class, "song_database")
+                //.fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();*/
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
-        View rootView = inflater.inflate(R.layout.fragment_playlist, container, false);
+        ArrayList<Song> list = new ArrayList<Song>();
 
-        return rootView;
+        //db.songDao().insert(new Song(150, "firstsong"));
+        list.add(new Song("149", "Gogo"));
+        list.add(new Song("149", "Song 2"));
+        list.add(new Song("149", "Song 2"));
+        list.add(new Song("149", "Song 2"));
+        list.add(new Song("149", "Song 2"));
+        list.add(new Song("149", "Song 2"));
+        list.add(new Song("149", "Song 2"));
+        list.add(new Song("149", "Song 2"));
+        list.add(new Song("149", "Song 2"));
+
+        mRecycleView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecycleView.setLayoutManager(mLayoutManager);
+
+        // nastavení čáreček mezi jednotlivými itemy v playlistu
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecycleView.getContext(), DividerItemDecoration.VERTICAL);
+        mRecycleView.addItemDecoration(dividerItemDecoration);
+
+        mAdapter = new SongAdapter(list);
+        mRecycleView.setAdapter(mAdapter);
     }
 }

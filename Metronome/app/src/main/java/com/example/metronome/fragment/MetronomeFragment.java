@@ -1,31 +1,27 @@
-package com.example.metronome;
+package com.example.metronome.fragment;
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.metronome.*;
-import android.text.Editable;
-import android.text.TextWatcher;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.metronome.databinding.FragmentMetronomeBinding;
 import com.example.metronome.model.Model;
 import com.example.metronome.viewModel.MetronomeViewModel;
-import com.sdsmdg.harjot.crollerTest.Croller;
-import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 
-public class Metronome extends Fragment {
+public class MetronomeFragment extends Fragment {
 
     //databinding
     private FragmentMetronomeBinding fragmentMetronomeBinding;
@@ -37,12 +33,12 @@ public class Metronome extends Fragment {
     private MetronomeViewModel mViewModel;
 
 
-    public Metronome() {
+    public MetronomeFragment() {
         // Required empty public constructor
     }
 
-    public static Metronome newInstance() {
-        Metronome fragment = new Metronome();
+    public static MetronomeFragment newInstance() {
+        MetronomeFragment fragment = new MetronomeFragment();
         return fragment;
     }
 
@@ -63,6 +59,22 @@ public class Metronome extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main_menu, menu);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                return true;
+            case R.id.action_save:
+                Intent intent = new Intent(getActivity(),AddSong.class);
+                this.startActivity(intent);
+                return true;
+            case R.id.action_bluetooth:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
