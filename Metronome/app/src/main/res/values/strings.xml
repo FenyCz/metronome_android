@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Metronome</string>
     <string name="tab_text_1">METRONOME</string>
-    <string name="tab_text_2">PLAYLIST</string>
+    <string name="tab_text_2">PLAYER</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment2">This is playlist</string>
@@ -21,6 +21,9 @@
     <string name="action_settings">Settings</string>
     <string name="action_bluetooth">Bluetooth</string>
     <string name="action_save">Save</string>
+    <string name="action_songlist">Songlist</string>
+    <string name="playlist">Playlists</string>
+    <string name="songs">Songs</string>
 
     <string-array name="Playlist">
         <item>Bouře</item>

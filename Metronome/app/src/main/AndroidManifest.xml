@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.metronome">
 
     <application
@@ -9,14 +10,46 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Playlist"></activity>
+        <activity android:name=".playlistdatabase_others.ChooseSongFromDatabase"
+            android:parentActivityName=".playlistdatabase_others.CurrentPlaylist"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
         <activity
-            android:name=".AddSong"
-            android:parentActivityName=".MainActivity" />
+            android:name=".playlistdatabase_others.CurrentPlaylist"
+            android:parentActivityName=".playlistdatabase.PlaylistActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".playlistdatabase.EditPlaylist" />
+        <activity
+            android:name=".playlistdatabase.AddPlaylist"
+            android:parentActivityName=".playlistdatabase.PlaylistActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".playlistdatabase.PlaylistActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".songdatabase.EditSong"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".songdatabase.Songlist"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".songdatabase.AddSong"
+            android:parentActivityName=".songdatabase.Songlist"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

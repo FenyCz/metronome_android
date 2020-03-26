@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    tools:context=".songdatabase.AddSong"
+    tools:context=".playlistdatabase.AddPlaylist"
     android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -13,34 +13,18 @@
         android:textColorHint="@color/primaryTextColor">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/song_name"
+            android:id="@+id/playlist_name_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Song Name"
-            android:textColor="@color/primaryTextColor"
-            android:backgroundTint="@color/primaryTextColor"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColorHint="@color/primaryTextColor">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tempo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Tempo (BPM)"
-            android:inputType="numberDecimal"
+            android:hint="Playlist Name"
             android:textColor="@color/primaryTextColor"
             android:backgroundTint="@color/primaryTextColor"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/button_save"
+        android:id="@+id/button_save_playlist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save" />
-
 
 </LinearLayout>

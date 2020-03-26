@@ -19,6 +19,8 @@ import android.view.ViewGroup;
 
 import com.example.metronome.databinding.FragmentMetronomeBinding;
 import com.example.metronome.model.Model;
+import com.example.metronome.songdatabase.AddSong;
+import com.example.metronome.songdatabase.Songlist;
 import com.example.metronome.viewModel.MetronomeViewModel;
 
 public class MetronomeFragment extends Fragment {
@@ -27,7 +29,7 @@ public class MetronomeFragment extends Fragment {
     private FragmentMetronomeBinding fragmentMetronomeBinding;
 
     // Model
-    private Model mData;
+    private Model mData = new Model();
 
     // ViewModel
     private MetronomeViewModel mViewModel;
@@ -67,9 +69,13 @@ public class MetronomeFragment extends Fragment {
             case R.id.action_settings:
                 return true;
             case R.id.action_save:
-                Intent intent = new Intent(getActivity(),AddSong.class);
+                Intent intent = new Intent(getActivity(), AddSong.class);
+                intent.putExtra("bpm", mData.getBpm());
                 this.startActivity(intent);
                 return true;
+            case R.id.action_songlist:
+                Intent pIntent = new Intent(getActivity(), Songlist.class);
+                this.startActivity(pIntent);
             case R.id.action_bluetooth:
                 return true;
             default:
@@ -85,9 +91,8 @@ public class MetronomeFragment extends Fragment {
         fragmentMetronomeBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_metronome,container,false);
         View view = fragmentMetronomeBinding.getRoot();
 
-        //default 100 bpm
-        mData = new Model();
-        mData.setBpm(100);
+        // set default tempo or tempo of song
+        mData.setBpm(((MainActivity)getActivity()).getResult());
 
         return view;
     }

@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.metronome.fragment.MetronomeFragment;
-import com.example.metronome.fragment.PlaylistFragment;
+import com.example.metronome.fragment.PlayerFragment;
 import com.example.metronome.R;
 
 /**
@@ -35,7 +35,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 fragment = MetronomeFragment.newInstance();
                 break;
             case 1:
-                fragment = PlaylistFragment.newInstance();
+                fragment = PlayerFragment.newInstance();
                 break;
         }
 

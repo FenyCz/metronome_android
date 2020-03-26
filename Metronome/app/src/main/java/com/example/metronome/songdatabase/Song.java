@@ -1,4 +1,4 @@
-package com.example.metronome;
+package com.example.metronome.songdatabase;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -30,4 +30,8 @@ public class Song {
     public String getBpm() {
         return bpm;
     }
+
+    public void setBpm(String bpm) { this.bpm = bpm; }
+
+    public void setSongName(String songName) { this.songName = songName; }
 }
