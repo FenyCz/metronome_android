@@ -5,38 +5,31 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.metronome.MainActivity;
 import com.example.metronome.R;
+import com.example.metronome.bluetooth.BluethootActivity;
 import com.example.metronome.playlistdatabase.Playlist;
 import com.example.metronome.playlistdatabase.PlaylistActivity;
 import com.example.metronome.playlistdatabase.PlaylistDatabase;
 import com.example.metronome.songdatabase.Song;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -80,6 +73,8 @@ public class PlayerFragment extends Fragment {
             case R.id.action_settings:
                 return true;
             case R.id.action_bluetooth:
+                Intent bIntent = new Intent(getActivity(), BluethootActivity.class);
+                this.startActivity(bIntent);
                 return true;
             case R.id.action_songlist:
                 Intent pIntent = new Intent(getActivity(), PlaylistActivity.class);

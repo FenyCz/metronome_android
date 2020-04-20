@@ -6,7 +6,6 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
-import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,21 +14,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.RequiresApi;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
 
 import com.example.metronome.R;
 import com.example.metronome.RunMetronome;
 import com.example.metronome.model.Model;
 import com.sdsmdg.harjot.crollerTest.Croller;
-
-import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -46,12 +43,14 @@ public class MetronomeViewModel extends ViewModel{
     private Timer timer;
     private boolean timerIsRunning = false;
 
-    private boolean checked = false;
+    public ToggleButton tb;
+    public boolean checked = false;
     private Croller croller;
     private EditText label;
     private Spinner accentSpinner;
     private Button butFreq;
     private float tapBpm;
+    public boolean playScreenOff = false;
 
     private GridLayout accentLayout;
 
@@ -63,6 +62,9 @@ public class MetronomeViewModel extends ViewModel{
     public MetronomeViewModel(Fragment activity, Model model) throws IllegalAccessException {
         this.data = model;
         this.fragActivity = activity;
+
+        // toggle button changer
+        this.tb = fragActivity.getActivity().findViewById(R.id.start_button);
 
         //set default croller data
         this.croller = (Croller) this.fragActivity.getActivity().findViewById(R.id.croller);
@@ -259,11 +261,23 @@ public class MetronomeViewModel extends ViewModel{
         }
     }
 
-    private void stopSound() {
+    public void stopSound() {
         //soundPool.release();
         //soundPool = null;
         this.timer.cancel();
         this.timer.purge();
+    }
+
+    public void stopMetronome(){
+        if(checked) {
+            checked = false;
+            stopSound();
+
+            //playScreenOff = true;
+
+            tb.setChecked(false);
+        }
+
     }
 
     public void playSound(){

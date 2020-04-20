@@ -1,15 +1,9 @@
 package com.example.metronome.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-
-import com.example.metronome.*;
-
+import android.os.PowerManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+
+import com.example.metronome.MainActivity;
+import com.example.metronome.R;
+import com.example.metronome.bluetooth.BluethootActivity;
 import com.example.metronome.databinding.FragmentMetronomeBinding;
 import com.example.metronome.model.Model;
 import com.example.metronome.songdatabase.AddSong;
@@ -76,7 +78,10 @@ public class MetronomeFragment extends Fragment {
             case R.id.action_songlist:
                 Intent pIntent = new Intent(getActivity(), Songlist.class);
                 this.startActivity(pIntent);
+                return true;
             case R.id.action_bluetooth:
+                Intent bIntent = new Intent(getActivity(), BluethootActivity.class);
+                this.startActivity(bIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -91,14 +96,14 @@ public class MetronomeFragment extends Fragment {
         fragmentMetronomeBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_metronome,container,false);
         View view = fragmentMetronomeBinding.getRoot();
 
-        // set default tempo or tempo of song
-        mData.setBpm(((MainActivity)getActivity()).getResult());
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        // set default tempo or tempo of song
+        mData.setBpm(((MainActivity)getActivity()).getResult());
 
         try {
             mViewModel = new MetronomeViewModel(this, mData);
@@ -109,4 +114,30 @@ public class MetronomeFragment extends Fragment {
         //set databinding to MetronomeViewModel
         fragmentMetronomeBinding.setMViewModel(mViewModel);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+        if (pm.isScreenOn()) {
+            mViewModel.stopMetronome();
+        }
+
+    }
+
+    /*@Override
+    public void onStop() {
+        super.onStop();
+        PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+        if (pm.isScreenOn()) {
+            // switch to audio
+        }
+        else {
+            if(mViewModel.playScreenOff){
+                //mViewModel.playButtonClick();
+                mViewModel.tb.setChecked(true);
+                mViewModel.playScreenOff = false;
+            }
+        }
+    }*/
 }

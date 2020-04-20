@@ -92,6 +92,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("bpm", Integer.parseInt(mSong.get(holder.getAdapterPosition()).getBpm()));
                 context.startActivity(intent);
             }
@@ -109,6 +110,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         mSong.remove(holder.getAdapterPosition());
         notifyItemRemoved(holder.getAdapterPosition());
         Intent intent = new Intent(v.getContext(), Songlist.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         v.getContext().startActivity(intent);
         ((Songlist)v.getContext()).finish();
     }
@@ -116,6 +118,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     // start new activity where you update song
     private void editItem(SongViewHolder holder, View v, int position) {
         Intent intent = new Intent(v.getContext(), EditSong.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("bpm", mSong.get(holder.getAdapterPosition()).getBpm());
         intent.putExtra("name", mSong.get(holder.getAdapterPosition()).getSongName());
         mSong.remove(holder.getAdapterPosition());

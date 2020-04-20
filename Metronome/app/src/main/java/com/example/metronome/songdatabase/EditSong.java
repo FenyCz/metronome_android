@@ -1,8 +1,5 @@
 package com.example.metronome.songdatabase;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.metronome.R;
-import com.example.metronome.playlistdatabase.Playlist;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -92,6 +90,7 @@ public class EditSong extends AppCompatActivity {
             db.songDao().update(mySong);
             Toast.makeText(getApplicationContext(), "Song edited", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(EditSong.this, Songlist.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         }

@@ -1,15 +1,15 @@
 package com.example.metronome.playlistdatabase_others;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
 
 import com.example.metronome.R;
 import com.example.metronome.playlistdatabase.Playlist;
@@ -55,6 +55,7 @@ public class CurrentPlaylist extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CurrentPlaylist.this, ChooseSongFromDatabase.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("name", curName);
                 startActivity(intent);
                 finish();

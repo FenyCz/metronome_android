@@ -1,8 +1,5 @@
 package com.example.metronome.playlistdatabase;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,11 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.metronome.R;
-import com.example.metronome.songdatabase.AddSong;
-import com.example.metronome.songdatabase.Song;
-import com.example.metronome.songdatabase.SongDatabase;
-import com.example.metronome.songdatabase.Songlist;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -45,6 +40,7 @@ public class AddPlaylist extends AppCompatActivity {
                 else {
                     db.playlistDao().insert(new Playlist(playlistName.getText().toString()));
                     Intent intent = new Intent(AddPlaylist.this, PlaylistActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
                 }

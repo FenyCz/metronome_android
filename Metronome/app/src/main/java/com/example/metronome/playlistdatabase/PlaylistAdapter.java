@@ -74,6 +74,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
                                 return true;
                             case R.id.load_in:
                                 Intent intent = new Intent(v.getContext(), MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.putExtra("playlist_name", mPlaylist.get(holder.getAdapterPosition()).getPlaylist());
                                 intent.putExtra("bpm", 100);
                                 intent.putExtra("tab", 1);
@@ -92,6 +93,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, CurrentPlaylist.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("name", mPlaylist.get(holder.getAdapterPosition()).getPlaylist());
                 mContext.startActivity(intent);
             }
@@ -110,6 +112,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         mPlaylist.remove(holder.getAdapterPosition());
         notifyItemRemoved(holder.getAdapterPosition());
         Intent intent = new Intent(v.getContext(), PlaylistActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         v.getContext().startActivity(intent);
         ((PlaylistActivity)v.getContext()).finish();
     }
@@ -117,6 +120,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     // edit item in database
     private void editItem(PlaylistViewHolder holder, View v, int position) {
         Intent intent = new Intent(v.getContext(), EditPlaylist.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("name", mPlaylist.get(holder.getAdapterPosition()).getPlaylist());
         mPlaylist.remove(holder.getAdapterPosition());
         v.getContext().startActivity(intent);

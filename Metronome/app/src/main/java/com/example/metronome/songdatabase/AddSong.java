@@ -1,8 +1,5 @@
 package com.example.metronome.songdatabase;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.metronome.R;
 
@@ -76,6 +75,7 @@ public class AddSong extends AppCompatActivity {
                     bpm.setText(Integer.toString(bpmInt));
                     db.songDao().insert(new Song(bpm.getText().toString(), songName.getText().toString()));
                     Intent intent = new Intent(AddSong.this, Songlist.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
                 }
