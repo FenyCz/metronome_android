@@ -27,7 +27,7 @@ public class BluetoothHandler {
 
     private AcceptThread acThread;
 
-    private ConnectThread coThread;
+    //private ConnectThread coThread;
     private BluetoothDevice bDevice;
     private UUID deviceUUID;
 
@@ -68,18 +68,22 @@ public class BluetoothHandler {
 
             BluetoothSocket socket = null;
             Log.e(TAG, "RFCOM server socket start ...");
-            try {
-                socket = serverSocket.accept();
-                Log.e(TAG, "RFCOM server socket accepted connection.");
-            } catch (IOException e) {
-                Log.e(TAG, "Error2: ", e);
-                //Toast.makeText(this,"Error2 " + e, Toast.LENGTH_SHORT).show();
+            while(true) {
+                try {
+                    socket = serverSocket.accept();
+                    Log.e(TAG, "RFCOM server socket accepted connection.");
+                } catch (IOException e) {
+                    Log.e(TAG, "Error2: ", e);
+                    break;
+                    //Toast.makeText(this,"Error2 " + e, Toast.LENGTH_SHORT).show();
+                }
+                //Toast.makeText(this,"Done", Toast.LENGTH_SHORT).show();
+                if (socket != null) {
+                    connected(socket, bDevice);
+                    cancel();
+                    break;
+                }
             }
-            //Toast.makeText(this,"Done", Toast.LENGTH_SHORT).show();
-            if (socket != null) {
-                connected(socket, bDevice);
-            }
-
         }
 
         public void cancel() {
@@ -92,7 +96,7 @@ public class BluetoothHandler {
         }
     }
 
-    class ConnectThread extends Thread{
+    /*class ConnectThread extends Thread{
         private BluetoothSocket socket;
 
         public ConnectThread(BluetoothDevice device, UUID uuid){
@@ -134,13 +138,13 @@ public class BluetoothHandler {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     public synchronized void start(){
-        if (coThread != null) {
+        /*if (coThread != null) {
             coThread.cancel();
             coThread = null;
-        }
+        }*/
 
         if (acThread == null){
             acThread = new AcceptThread();
@@ -148,10 +152,10 @@ public class BluetoothHandler {
         }
     }
 
-    public void startClient(BluetoothDevice device, UUID uuid){
+    /*public void startClient(BluetoothDevice device, UUID uuid){
         coThread = new ConnectThread(device, uuid);
         coThread.start();
-    }
+    }*/
 
     private class ConnectedThread extends Thread{
         private BluetoothSocket socket;

@@ -82,8 +82,15 @@ public class BluethootActivity extends AppCompatActivity {
         }
     };
 
-    public void makeBTconnection(BluetoothDevice device, UUID uuid){
+    /*public void makeBTconnection(BluetoothDevice device, UUID uuid){
         bluetoothHandler.startClient(device,uuid);
+    }*/
+
+    public void sendData(View view) {
+        byte[] bytes = editTextSend.getText().toString().getBytes(Charset.defaultCharset());
+        bluetoothHandler.write(bytes);
+
+        editTextSend.setText("");
     }
 
         /*BluetoothGattServerCallback bluetoothGattServerCallback= new BluetoothGattServerCallback() {
@@ -271,20 +278,13 @@ public class BluethootActivity extends AppCompatActivity {
         //unregisterReceiver(receiver);
     }
 
-    public void startConnection(View view) {
+    /*public void startConnection(View view) {
         strConnection();
-    }
+    }*/
 
-    public void sendData(View view) {
-        byte[] bytes = editTextSend.getText().toString().getBytes(Charset.defaultCharset());
-        bluetoothHandler.write(bytes);
-
-        editTextSend.setText("");
-    }
-
-    public void strConnection(){
+    /*public void strConnection(){
         makeBTconnection(bDevice,MY_UUID);
-    }
+    }*/
 
     /*@Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
