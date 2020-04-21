@@ -9,17 +9,23 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.metronome.R;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class BluethootActivity extends AppCompatActivity {
 
@@ -30,22 +36,54 @@ public class BluethootActivity extends AppCompatActivity {
 
     public ArrayList<BluetoothDevice> btDevices = new ArrayList<>();
     public BTDeviceListAdapter btDeviceListAdapter;
-    ListView list_new_devices;
+    ListView listNewDevices;
 
     ArrayList<BluetoothDevice> btPaired = new ArrayList<>();
     public BTPairedListAdapter btPairedListAdapter;
-    ListView list_paired_devices;
+    ListView listPairedDevices;
 
     HashSet<String> ha = new HashSet<String>();
-    HashSet<String> hp = new HashSet<String>();
+    HashSet<BluetoothDevice> hp = new HashSet<BluetoothDevice>();
+
+    EditText editTextSend;
+
+    BluetoothHandler bluetoothHandler;
+
+    private final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+    BluetoothDevice bDevice;
+
+    TextView inMessage;
+    StringBuilder message;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluethoot);
-        list_new_devices = (ListView) findViewById(R.id.list_new_devices);
-        list_paired_devices = (ListView) findViewById(R.id.list_paired_devices);
+        listNewDevices = (ListView) findViewById(R.id.list_new_devices);
+        listPairedDevices = (ListView) findViewById(R.id.list_paired_devices);
+        editTextSend = findViewById(R.id.editTextSend);
+
+        inMessage = findViewById(R.id.textViewChat);
+        message = new StringBuilder();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mesReceiver, new IntentFilter("inMessage"));
+    }
+
+    BroadcastReceiver mesReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String text = intent.getStringExtra("text");
+
+            message.append(text + "\n");
+
+            inMessage.setText(message);
+        }
+    };
+
+    public void makeBTconnection(BluetoothDevice device, UUID uuid){
+        bluetoothHandler.startClient(device,uuid);
     }
 
         /*BluetoothGattServerCallback bluetoothGattServerCallback= new BluetoothGattServerCallback() {
@@ -102,6 +140,11 @@ public class BluethootActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
 
+        if(bluetoothAdapter.isDiscovering())
+        {
+            bluetoothAdapter.cancelDiscovery();
+        }
+
         bluetoothAdapter.startDiscovery();
 
         receiver = new BroadcastReceiver() {
@@ -120,11 +163,9 @@ public class BluethootActivity extends AppCompatActivity {
                         //Toast.makeText(getApplicationContext(), "Found device " + device.getName(), Toast.LENGTH_SHORT).show();
                         btDevices.add(device);
                         btDeviceListAdapter = new BTDeviceListAdapter(context, R.layout.btdevice_adapter, btDevices);
-                        list_new_devices.setAdapter(btDeviceListAdapter);
+                        listNewDevices.setAdapter(btDeviceListAdapter);
                     }
                 }
-
-                bluetoothAdapter.cancelDiscovery();
             }
         };
     }
@@ -144,18 +185,27 @@ public class BluethootActivity extends AppCompatActivity {
         }
 
         // zobrazit sparovana zarizeni
-        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+        final Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
 
         if (pairedDevices.size() > 0) {
             // There are paired devices. Get the name and address of each paired device.
-            for (BluetoothDevice device : pairedDevices) {
+            for (final BluetoothDevice device : pairedDevices) {
 
-                if (!hp.contains(device.getAddress())) {
-                    hp.add(device.getAddress());
+                if (!hp.contains(device)) {
+                    hp.add(device);
 
                     btPaired.add(device);
-                    btPairedListAdapter = new BTPairedListAdapter(getApplicationContext(), R.layout.btpaired_adapter, btPaired);
-                    list_paired_devices.setAdapter(btPairedListAdapter);
+                    btPairedListAdapter = new BTPairedListAdapter(getApplicationContext(), R.layout.btpaired_adapter, btPaired, bDevice, bluetoothHandler);
+                    listPairedDevices.setAdapter(btPairedListAdapter);
+                    listPairedDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                            //bDevice = device; //FAILURE
+                            bDevice = btPaired.get(position);
+                            bluetoothHandler = new BluetoothHandler(getApplicationContext());
+                        }
+                    });
                 }
             }
         }
@@ -218,7 +268,26 @@ public class BluethootActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         bluetoothAdapter.cancelDiscovery();
-        unregisterReceiver(receiver);
+        //unregisterReceiver(receiver);
     }
 
+    public void startConnection(View view) {
+        strConnection();
+    }
+
+    public void sendData(View view) {
+        byte[] bytes = editTextSend.getText().toString().getBytes(Charset.defaultCharset());
+        bluetoothHandler.write(bytes);
+
+        editTextSend.setText("");
+    }
+
+    public void strConnection(){
+        makeBTconnection(bDevice,MY_UUID);
+    }
+
+    /*@Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }*/
 }

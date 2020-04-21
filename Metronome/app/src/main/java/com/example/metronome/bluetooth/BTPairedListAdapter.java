@@ -19,12 +19,17 @@ public class BTPairedListAdapter extends ArrayAdapter<BluetoothDevice> {
     private LayoutInflater layoutInflater;
     private ArrayList<BluetoothDevice> devices;
     private int  viewResourceId;
+    private BluetoothDevice bDevice;
+    private BluetoothHandler bHandler;
 
-    public BTPairedListAdapter(Context context, int rId, ArrayList<BluetoothDevice> devices){
+    public BTPairedListAdapter(Context context, int rId, ArrayList<BluetoothDevice> devices, BluetoothDevice bDevice, BluetoothHandler bluetoothHandler){
         super(context, rId,devices);
         this.devices = devices;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         viewResourceId = rId;
+
+        bHandler = bluetoothHandler;
+        this.bDevice = bDevice;
     }
 
     @SuppressLint("ViewHolder")
@@ -45,7 +50,8 @@ public class BTPairedListAdapter extends ArrayAdapter<BluetoothDevice> {
         /*convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                devices.get(position).createBond();
+                bDevice = devices.get(position);
+                bHandler = new BluetoothHandler(getContext().getApplicationContext());
             }
         });*/
 

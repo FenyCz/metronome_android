@@ -5,7 +5,10 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,10 +16,14 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.UUID;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
 public class BluetoothHandler {
 
     private BluetoothAdapter bluetoothAdapter;
     private Context mContext;
+
+    private final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     private AcceptThread acThread;
 
@@ -26,11 +33,11 @@ public class BluetoothHandler {
 
     private ConnectedThread cntThread;
 
-
     public BluetoothHandler(Context context) {
 
         mContext = context;
         bluetoothAdapter = bluetoothAdapter.getDefaultAdapter();
+        start();
     }
 
 
@@ -38,7 +45,6 @@ public class BluetoothHandler {
 
     class AcceptThread extends Thread {
 
-        private final UUID MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
         private final String TAG = "Info";
         private BluetoothServerSocket serverSocket;
 
@@ -47,7 +53,7 @@ public class BluetoothHandler {
             BluetoothServerSocket tmp = null;
 
             try {
-                tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord("METRONOME", MY_UUID_SECURE);
+                tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord("METRONOME", MY_UUID);
             } catch (IOException e) {
                 Log.e(TAG, "Error: ", e);
                 //Toast.makeText(this,"Error " + e, Toast.LENGTH_SHORT).show();
@@ -61,9 +67,10 @@ public class BluetoothHandler {
         public void run() {
 
             BluetoothSocket socket = null;
-
+            Log.e(TAG, "RFCOM server socket start ...");
             try {
                 socket = serverSocket.accept();
+                Log.e(TAG, "RFCOM server socket accepted connection.");
             } catch (IOException e) {
                 Log.e(TAG, "Error2: ", e);
                 //Toast.makeText(this,"Error2 " + e, Toast.LENGTH_SHORT).show();
@@ -96,7 +103,7 @@ public class BluetoothHandler {
         public void run(){
             BluetoothSocket tmp = null;
             try {
-                tmp = bDevice.createRfcommSocketToServiceRecord(deviceUUID);
+                tmp = bDevice.createInsecureRfcommSocketToServiceRecord(deviceUUID);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -110,12 +117,12 @@ public class BluetoothHandler {
             try {
                 socket.connect();
             } catch (IOException e) {
+                e.printStackTrace();
                 try {
                     socket.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                e.printStackTrace();
             }
             connected(socket, bDevice);
         }
@@ -176,6 +183,13 @@ public class BluetoothHandler {
                 try {
                     bytes = inStream.read(buffer);
                     String incomingMessage = new String(buffer,0, bytes);
+                    Log.e(TAG, "InputStream: " + incomingMessage);
+
+                    //zasalni zpravy do aktivity
+                    Intent incomingIntent = new Intent("inMessage");
+                    incomingIntent.putExtra("text", incomingMessage);
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(incomingIntent);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
@@ -185,6 +199,7 @@ public class BluetoothHandler {
 
         public void write(byte[] bytes){
             String text = new String(bytes, Charset.defaultCharset());
+            Log.e(TAG, "Outputstream: " + text);
             try {
                 outStream.write(bytes);
             } catch (IOException e) {
