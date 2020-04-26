@@ -1,15 +1,18 @@
 package com.example.metronome.bluetooth;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,12 +23,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.metronome.R;
+import com.example.metronome.playlistdatabase.Playlist;
+import com.example.metronome.playlistdatabase.PlaylistDatabase;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.example.metronome.R.color.secondaryLightColor;
 
 public class BluethootActivity extends AppCompatActivity {
 
@@ -47,14 +54,20 @@ public class BluethootActivity extends AppCompatActivity {
 
     EditText editTextSend;
 
-    BluetoothHandler bluetoothHandler;
-
     private final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     BluetoothDevice bDevice;
 
     TextView inMessage;
     StringBuilder message;
+    private boolean isRegistred = false;
+
+    BluetoothStart bluetoothStart = BluetoothStart.getInstance();
+
+    boolean flagFirstClick = false;
+
+    Button sendPlaylists;
+    Button disconnect;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -63,12 +76,21 @@ public class BluethootActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bluethoot);
         listNewDevices = (ListView) findViewById(R.id.list_new_devices);
         listPairedDevices = (ListView) findViewById(R.id.list_paired_devices);
-        editTextSend = findViewById(R.id.editTextSend);
+        sendPlaylists = findViewById(R.id.buttonSend);
+        disconnect = findViewById(R.id.buttonDisconnect);
 
         inMessage = findViewById(R.id.textViewChat);
         message = new StringBuilder();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mesReceiver, new IntentFilter("inMessage"));
+
+        if(bluetoothStart.flagConnected){
+            inMessage.setText("Connected!");
+            inMessage.setBackgroundColor(Color.parseColor("#009900"));
+            sendPlaylists.setBackgroundColor(Color.parseColor("#009900"));
+            disconnect.setBackgroundColor(Color.parseColor("#009900"));
+            bluetoothStart.newActivity = this;
+        }
     }
 
     BroadcastReceiver mesReceiver = new BroadcastReceiver() {
@@ -78,50 +100,49 @@ public class BluethootActivity extends AppCompatActivity {
 
             message.append(text + "\n");
 
-            inMessage.setText(message);
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            //inMessage.setText(message);
         }
     };
 
-    /*public void makeBTconnection(BluetoothDevice device, UUID uuid){
-        bluetoothHandler.startClient(device,uuid);
-    }*/
-
     public void sendData(View view) {
-        byte[] bytes = editTextSend.getText().toString().getBytes(Charset.defaultCharset());
-        bluetoothHandler.write(bytes);
+        //byte[] bytes = editTextSend.getText().toString().getBytes(Charset.defaultCharset());
+        //bluetoothStart.bluetoothHandler.write(bytes);
 
-        editTextSend.setText("");
+        // database builder
+        PlaylistDatabase pdb = PlaylistDatabase.getInstance(getApplicationContext());
+
+        // list for database songs
+        ArrayList<Playlist> listPlaylist = (ArrayList<Playlist>) pdb.playlistDao().getAllPlaylists();
+
+        if(listPlaylist.size() != 0){
+            for(int i = 0; i < listPlaylist.size(); i++){
+                String pData = "P*";
+                String pName = listPlaylist.get(i).playlist + "#";
+
+                pData += pName;
+
+                byte[] plBytes = pData.getBytes(Charset.defaultCharset());
+                bluetoothStart.bluetoothHandler.write(plBytes);
+
+                for(int o = 0; o < listPlaylist.get(i).playlistSongs.size(); o++)
+                {
+                    String sData = "S*";
+                    String sName = listPlaylist.get(i).playlistSongs.get(o).getSongName() + "*";
+                    String sTempo = listPlaylist.get(i).playlistSongs.get(o).getBpm() + "*";
+                    String sPlaylist = listPlaylist.get(i).playlist + "#";
+
+                    sData = sData + sName + sTempo + sPlaylist;
+
+                    byte[] soBytes = sData.getBytes(Charset.defaultCharset());
+                    bluetoothStart.bluetoothHandler.write(soBytes);
+                }
+            }
+        }
     }
 
-        /*BluetoothGattServerCallback bluetoothGattServerCallback= new BluetoothGattServerCallback() {
-            @Override
-            public void onConnectionStateChange(BluetoothDevice device, int status, int newState) {
-                super.onConnectionStateChange(device, status, newState);
-            }
-
-            @Override
-            public void onCharacteristicReadRequest(BluetoothDevice device, int requestId, int offset, BluetoothGattCharacteristic characteristic) {
-                super.onCharacteristicReadRequest(device, requestId, offset, characteristic);
-            }
-
-            @Override
-            public void onCharacteristicWriteRequest(BluetoothDevice device, int requestId, BluetoothGattCharacteristic characteristic, boolean preparedWrite, boolean responseNeeded, int offset, byte[] value) {
-                super.onCharacteristicWriteRequest(device, requestId, characteristic, preparedWrite, responseNeeded, offset, value);
-            }
-
-            @Override
-            public void onDescriptorReadRequest(BluetoothDevice device, int requestId, int offset, BluetoothGattDescriptor descriptor) {
-                super.onDescriptorReadRequest(device, requestId, offset, descriptor);
-            }
-
-            @Override
-            public void onDescriptorWriteRequest(BluetoothDevice device, int requestId, BluetoothGattDescriptor descriptor, boolean preparedWrite, boolean responseNeeded, int offset, byte[] value) {
-                super.onDescriptorWriteRequest(device, requestId, descriptor, preparedWrite, responseNeeded, offset, value);
-            }
-        };*/
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void FoundedDevices(View view) {
+    public void Find(View view) {
 
         // inicializace BT adapteru
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -140,8 +161,6 @@ public class BluethootActivity extends AppCompatActivity {
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
         startActivity(discoverableIntent);
-        Toast.makeText(this, "Discovering devices...", Toast.LENGTH_SHORT).show();
-
 
         // vyhledat zarizeni
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -153,32 +172,35 @@ public class BluethootActivity extends AppCompatActivity {
         }
 
         bluetoothAdapter.startDiscovery();
+        Toast.makeText(this, "Discovering devices...", Toast.LENGTH_SHORT).show();
 
         receiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
+            isRegistred = true;
+            String action = intent.getAction();
 
-                if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                    // Discovery has found a device. Get the BluetoothDevice
-                    // object and its info from the Intent.
-                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                // Discovery has found a device. Get the BluetoothDevice
+                // object and its info from the Intent.
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
 
-                    if (!ha.contains(device.getAddress())) {
-                        ha.add(device.getAddress());
+                if (!ha.contains(device.getAddress())) {
+                    ha.add(device.getAddress());
 
-                        //Toast.makeText(getApplicationContext(), "Found device " + device.getName(), Toast.LENGTH_SHORT).show();
-                        btDevices.add(device);
-                        btDeviceListAdapter = new BTDeviceListAdapter(context, R.layout.btdevice_adapter, btDevices);
-                        listNewDevices.setAdapter(btDeviceListAdapter);
-                    }
+                    //Toast.makeText(getApplicationContext(), "Found device " + device.getName(), Toast.LENGTH_SHORT).show();
+                    btDevices.add(device);
+                    btDeviceListAdapter = new BTDeviceListAdapter(context, R.layout.btdevice_adapter, btDevices);
+                    listNewDevices.setAdapter(btDeviceListAdapter);
                 }
+            }
             }
         };
     }
 
     public void Paired(View view) {
-        // inicializace BT adapteru
+
+        // inicializace BT adapteru + zastaveni vyhledavani zarizeni
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             Toast.makeText(this, "Bluetooth is not support.", Toast.LENGTH_SHORT).show();
@@ -191,6 +213,11 @@ public class BluethootActivity extends AppCompatActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
 
+        // umoznit, aby bylo zarizeni viditelne pomoci bluetooth
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        startActivity(discoverableIntent);
+
         // zobrazit sparovana zarizeni
         final Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
 
@@ -202,80 +229,69 @@ public class BluethootActivity extends AppCompatActivity {
                     hp.add(device);
 
                     btPaired.add(device);
-                    btPairedListAdapter = new BTPairedListAdapter(getApplicationContext(), R.layout.btpaired_adapter, btPaired, bDevice, bluetoothHandler);
+                    btPairedListAdapter = new BTPairedListAdapter(getApplicationContext(), R.layout.btpaired_adapter, btPaired, bDevice, bluetoothStart.bluetoothHandler);
                     listPairedDevices.setAdapter(btPairedListAdapter);
                     listPairedDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @SuppressLint("ResourceAsColor")
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                            //bDevice = device; //FAILURE
-                            bDevice = btPaired.get(position);
-                            bluetoothHandler = new BluetoothHandler(getApplicationContext());
+                            if(bluetoothStart.flagConnected){
+                                inMessage.setText("Already connected!");
+                            }
+
+                            else {
+                                if(!flagFirstClick) {
+                                    bDevice = btPaired.get(position);
+                                    inMessage.setText("Server: Ready to connect to " + bDevice.getName());
+                                    bluetoothStart.bluetoothHandler = new BluetoothHandler(getApplicationContext(), BluethootActivity.this);
+                                    flagFirstClick = true;
+                                }
+                                else{
+                                    bDevice = btPaired.get(position);
+                                    inMessage.setText("Server: Ready to connect to " + bDevice.getName());
+                                    bluetoothStart.bluetoothHandler = null;
+                                    bluetoothStart.bluetoothHandler = new BluetoothHandler(getApplicationContext(), BluethootActivity.this);
+                                }
+                            }
+
                         }
                     });
                 }
             }
         }
+
+        //BluetoothStart.getInstance().Paired(this);
     }
-
-        //while(serverSocket==null) {
-            //new AcceptThread(bluetoothAdapter);
-            //new AcceptThread().run();
-        //}
-
-        /*bluetoothAdvertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
-        gattServer = bluetoothManager.openGattServer(this, bluetoothGattServerCallback);
-        BluetoothGattService service = new BluetoothGattService(UUID.fromString("d5925e86-7a88-11ea-bc55-0242ac130003"), BluetoothGattService.SERVICE_TYPE_PRIMARY);
-
-        BluetoothGattCharacteristic characteristic = new BluetoothGattCharacteristic(UUID.fromString("275348FB-C14D-4FD5-B434-7C3F351DEA5F"),
-                BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_WRITE |
-                        BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-                BluetoothGattCharacteristic.PERMISSION_READ | BluetoothGattCharacteristic.PERMISSION_WRITE);
-
-        characteristic.addDescriptor(new BluetoothGattDescriptor(UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"), BluetoothGattCharacteristic.PERMISSION_WRITE));
-
-        service.addCharacteristic(characteristic);
-
-        gattServer.addService(service);*/
-
-    /*@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void startAdvertising(){
-        AdvertiseSettings settings = new AdvertiseSettings.Builder()
-                .setConnectable(true)
-                .build();
-
-        AdvertiseData advertiseData = new AdvertiseData.Builder()
-                .setIncludeDeviceName(true)
-                .setIncludeTxPowerLevel(true)
-                .build();
-
-        AdvertiseData scanResponseData = new AdvertiseData.Builder()
-                .addServiceUuid(new ParcelUuid(your_service_uuid))
-                .setIncludeTxPowerLevel(true)
-                .build();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private AdvertiseCallback callback = new AdvertiseCallback() {
-        private static final String TAG = "Activity";
-
-        @Override
-        public void onStartSuccess(AdvertiseSettings settingsInEffect) {
-            Log.d(TAG, "BLE advertisement added successfully");
-        }
-
-        @Override
-        public void onStartFailure(int errorCode) {
-            Log.e(TAG, "Failed to add BLE advertisement, reason: " + errorCode);
-        }
-    };*/
-
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        bluetoothAdapter.cancelDiscovery();
-        //unregisterReceiver(receiver);
+        //bluetoothAdapter.cancelDiscovery();
+        if(isRegistred) {
+            unregisterReceiver(receiver);
+        }
+    }
+
+
+    public void CloseConnection(View view) {
+        if(!bluetoothStart.flagConnected){
+            Toast.makeText(this, "Disconected!", Toast.LENGTH_SHORT).show();
+            inMessage.setText("");
+            inMessage.setBackgroundColor(getResources().getColor(secondaryLightColor));
+            sendPlaylists.setBackgroundColor(getResources().getColor(secondaryLightColor));
+            disconnect.setBackgroundColor(getResources().getColor(secondaryLightColor));
+        }
+        else {
+            bluetoothStart.bluetoothHandler.cancel();
+            bluetoothStart.flagConnected = false;
+            flagFirstClick = false;
+            inMessage.setText("");
+            inMessage.setBackgroundColor(getResources().getColor(secondaryLightColor));
+            sendPlaylists.setBackgroundColor(getResources().getColor(secondaryLightColor));
+            disconnect.setBackgroundColor(getResources().getColor(secondaryLightColor));
+            Toast.makeText(this, "Disconected!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /*public void startConnection(View view) {
@@ -286,8 +302,4 @@ public class BluethootActivity extends AppCompatActivity {
         makeBTconnection(bDevice,MY_UUID);
     }*/
 
-    /*@Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }*/
 }

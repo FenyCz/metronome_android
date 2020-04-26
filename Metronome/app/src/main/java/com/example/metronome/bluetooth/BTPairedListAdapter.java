@@ -48,10 +48,12 @@ public class BTPairedListAdapter extends ArrayAdapter<BluetoothDevice> {
         }
 
         /*convertView.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                bDevice = devices.get(position);
-                bHandler = new BluetoothHandler(getContext().getApplicationContext());
+                //bDevice = devices.get(position);
+                //bHandler = new BluetoothHandler(getContext().getApplicationContext());
+                v.setBackgroundColor(secondaryColor);
             }
         });*/
 

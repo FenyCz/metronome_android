@@ -19,7 +19,7 @@ public class Playlist {
     public int id;
 
     @ColumnInfo(name = "playlist_name")
-    private String playlist;
+    public String playlist;
 
     @ColumnInfo(name = "playlist_songs")
     @TypeConverters(ConvertList.class)
