@@ -28,7 +28,7 @@ public class BluetoothHandler {
 
     private final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    private AcceptThread acThread;
+    public AcceptThread acThread;
 
     private BluetoothDevice bDevice;
 
@@ -77,35 +77,30 @@ public class BluetoothHandler {
                 }
             });
 
-            while(true) {
-                try {
-                    socket = serverSocket.accept();
-                    Log.e(TAG, "RFCOM server socket accepted connection.");
 
-                    bluethootActivity.runOnUiThread(new Runnable()
-                    {
-                        public void run()
-                        {
-                            Toast.makeText(bluethootActivity,"Connected!", Toast.LENGTH_SHORT).show();
-                            bluethootActivity.inMessage.setText("Connected!");
-                            bluethootActivity.inMessage.setBackgroundColor(Color.parseColor("#009900"));
-                            bluethootActivity.sendPlaylists.setBackgroundColor(Color.parseColor("#009900"));
-                            bluethootActivity.disconnect.setBackgroundColor(Color.parseColor("#009900"));
-                            bluethootActivity.bluetoothStart.flagConnected = true;
-                        }
-                    });
+            try {
+                socket = serverSocket.accept();
+                Log.e(TAG, "RFCOM server socket accepted connection.");
 
-                } catch (IOException e) {
-                    Log.e(TAG, "Error2: ", e);
-                    break;
-                    //Toast.makeText(this,"Error2 " + e, Toast.LENGTH_SHORT).show();
-                }
-                //Toast.makeText(this,"Done", Toast.LENGTH_SHORT).show();
-                if (socket != null) {
-                    connected(socket, bDevice);
-                    cancel();
-                    break;
-                }
+                bluethootActivity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(bluethootActivity, "Connected!", Toast.LENGTH_SHORT).show();
+                        bluethootActivity.inMessage.setText("Connected!");
+                        bluethootActivity.inMessage.setBackgroundColor(Color.parseColor("#009900"));
+                        bluethootActivity.sendPlaylists.setBackgroundColor(Color.parseColor("#009900"));
+                        bluethootActivity.disconnect.setBackgroundColor(Color.parseColor("#009900"));
+                        bluethootActivity.bluetoothStart.flagConnected = true;
+                    }
+                });
+
+            } catch (IOException e) {
+                Log.e(TAG, "Error2: ", e);
+                //Toast.makeText(this,"Error2 " + e, Toast.LENGTH_SHORT).show();
+            }
+            //Toast.makeText(this,"Done", Toast.LENGTH_SHORT).show();
+            if (socket != null) {
+                connected(socket, bDevice);
+                cancel();
             }
         }
 

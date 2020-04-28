@@ -89,7 +89,6 @@ public class BluethootActivity extends AppCompatActivity {
             inMessage.setBackgroundColor(Color.parseColor("#009900"));
             sendPlaylists.setBackgroundColor(Color.parseColor("#009900"));
             disconnect.setBackgroundColor(Color.parseColor("#009900"));
-            bluetoothStart.newActivity = this;
         }
     }
 
@@ -109,36 +108,42 @@ public class BluethootActivity extends AppCompatActivity {
         //byte[] bytes = editTextSend.getText().toString().getBytes(Charset.defaultCharset());
         //bluetoothStart.bluetoothHandler.write(bytes);
 
-        // database builder
-        PlaylistDatabase pdb = PlaylistDatabase.getInstance(getApplicationContext());
+        if(bluetoothStart.flagConnected){
+            // database builder
+            PlaylistDatabase pdb = PlaylistDatabase.getInstance(getApplicationContext());
 
-        // list for database songs
-        ArrayList<Playlist> listPlaylist = (ArrayList<Playlist>) pdb.playlistDao().getAllPlaylists();
+            // list for database songs
+            ArrayList<Playlist> listPlaylist = (ArrayList<Playlist>) pdb.playlistDao().getAllPlaylists();
 
-        if(listPlaylist.size() != 0){
-            for(int i = 0; i < listPlaylist.size(); i++){
-                String pData = "P*";
-                String pName = listPlaylist.get(i).playlist + "#";
+            if(listPlaylist.size() != 0){
+                for(int i = 0; i < listPlaylist.size(); i++){
+                    String pData = "P*";
+                    String pName = listPlaylist.get(i).playlist + "#";
 
-                pData += pName;
+                    pData += pName;
 
-                byte[] plBytes = pData.getBytes(Charset.defaultCharset());
-                bluetoothStart.bluetoothHandler.write(plBytes);
+                    byte[] plBytes = pData.getBytes(Charset.defaultCharset());
+                    bluetoothStart.bluetoothHandler.write(plBytes);
 
-                for(int o = 0; o < listPlaylist.get(i).playlistSongs.size(); o++)
-                {
-                    String sData = "S*";
-                    String sName = listPlaylist.get(i).playlistSongs.get(o).getSongName() + "*";
-                    String sTempo = listPlaylist.get(i).playlistSongs.get(o).getBpm() + "*";
-                    String sPlaylist = listPlaylist.get(i).playlist + "#";
+                    for(int o = 0; o < listPlaylist.get(i).playlistSongs.size(); o++)
+                    {
+                        String sData = "S*";
+                        String sName = listPlaylist.get(i).playlistSongs.get(o).getSongName() + "*";
+                        String sTempo = listPlaylist.get(i).playlistSongs.get(o).getBpm() + "*";
+                        String sPlaylist = listPlaylist.get(i).playlist + "#";
 
-                    sData = sData + sName + sTempo + sPlaylist;
+                        sData = sData + sName + sTempo + sPlaylist;
 
-                    byte[] soBytes = sData.getBytes(Charset.defaultCharset());
-                    bluetoothStart.bluetoothHandler.write(soBytes);
+                        byte[] soBytes = sData.getBytes(Charset.defaultCharset());
+                        bluetoothStart.bluetoothHandler.write(soBytes);
+                    }
                 }
             }
         }
+        else{
+            Toast.makeText(this, "Connect first!", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -241,6 +246,7 @@ public class BluethootActivity extends AppCompatActivity {
                             }
 
                             else {
+
                                 if(!flagFirstClick) {
                                     bDevice = btPaired.get(position);
                                     inMessage.setText("Server: Ready to connect to " + bDevice.getName());
@@ -250,6 +256,7 @@ public class BluethootActivity extends AppCompatActivity {
                                 else{
                                     bDevice = btPaired.get(position);
                                     inMessage.setText("Server: Ready to connect to " + bDevice.getName());
+                                    bluetoothStart.bluetoothHandler.acThread.cancel();
                                     bluetoothStart.bluetoothHandler = null;
                                     bluetoothStart.bluetoothHandler = new BluetoothHandler(getApplicationContext(), BluethootActivity.this);
                                 }
@@ -279,17 +286,18 @@ public class BluethootActivity extends AppCompatActivity {
             Toast.makeText(this, "Disconected!", Toast.LENGTH_SHORT).show();
             inMessage.setText("");
             inMessage.setBackgroundColor(getResources().getColor(secondaryLightColor));
-            sendPlaylists.setBackgroundColor(getResources().getColor(secondaryLightColor));
-            disconnect.setBackgroundColor(getResources().getColor(secondaryLightColor));
+            sendPlaylists.setBackground(getResources().getDrawable(R.drawable.circle_button_fragment));
+            disconnect.setBackground(getResources().getDrawable(R.drawable.circle_button_fragment));
         }
+
         else {
             bluetoothStart.bluetoothHandler.cancel();
             bluetoothStart.flagConnected = false;
             flagFirstClick = false;
             inMessage.setText("");
             inMessage.setBackgroundColor(getResources().getColor(secondaryLightColor));
-            sendPlaylists.setBackgroundColor(getResources().getColor(secondaryLightColor));
-            disconnect.setBackgroundColor(getResources().getColor(secondaryLightColor));
+            sendPlaylists.setBackground(getResources().getDrawable(R.drawable.circle_button_fragment));
+            disconnect.setBackground(getResources().getDrawable(R.drawable.circle_button_fragment));
             Toast.makeText(this, "Disconected!", Toast.LENGTH_SHORT).show();
         }
     }

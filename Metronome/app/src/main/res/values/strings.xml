@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Metronome</string>
+    <string name="app_name">MyMetronome</string>
     <string name="tab_text_1">METRONOME</string>
     <string name="tab_text_2">PLAYER</string>
 

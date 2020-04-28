@@ -12,10 +12,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,10 +27,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.metronome.MainActivity;
 import com.example.metronome.R;
 import com.example.metronome.bluetooth.BluethootActivity;
+import com.example.metronome.databinding.FragmentPlayerBinding;
 import com.example.metronome.playlistdatabase.Playlist;
 import com.example.metronome.playlistdatabase.PlaylistActivity;
 import com.example.metronome.playlistdatabase.PlaylistDatabase;
 import com.example.metronome.songdatabase.Song;
+import com.example.metronome.viewModel.PlayerViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +47,14 @@ public class PlayerFragment extends Fragment {
     private Integer curNumber;
     private TextView playlistTempo;
     private boolean playlistFound = false;
+
+    private Button next;
+    private Button previous;
+    ArrayList<Playlist> listPlaylist;
+
+    private ToggleButton playStop;
+    private PlayerViewModel pViewModel;
+    private FragmentPlayerBinding playerMetronomeBinding;
 
     public PlayerFragment() {
         // Required empty public constructor
@@ -62,7 +75,9 @@ public class PlayerFragment extends Fragment {
 
         inflater.inflate(R.menu.main_menu, menu);
         MenuItem item = menu.findItem(R.id.action_save);
+        MenuItem item1 = menu.findItem(R.id.action_songlist);
         item.setVisible(false);
+        item1.setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -76,7 +91,7 @@ public class PlayerFragment extends Fragment {
                 Intent bIntent = new Intent(getActivity(), BluethootActivity.class);
                 this.startActivity(bIntent);
                 return true;
-            case R.id.action_songlist:
+            case R.id.action_playlist:
                 Intent pIntent = new Intent(getActivity(), PlaylistActivity.class);
                 this.startActivity(pIntent);
                 return true;
@@ -91,10 +106,16 @@ public class PlayerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fragment_player, container, false);
+        //databinding activating
+        playerMetronomeBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_player,container,false);
+        View view = playerMetronomeBinding.getRoot();
+
         mRecycleView = view.findViewById(R.id.recyclerview_player);
         playerName = view.findViewById(R.id.player_name);
         playlistTempo = view.findViewById(R.id.playlist_tempo);
+        next = view.findViewById(R.id.button_next_playlist);
+        previous = view.findViewById(R.id.button_previous_playlist);
+        playStop = view.findViewById(R.id.start_button_playlist);
 
         playerName.setText(((MainActivity) Objects.requireNonNull(getActivity())).getPlaylistName());
 
@@ -105,7 +126,7 @@ public class PlayerFragment extends Fragment {
         PlaylistDatabase pdb = PlaylistDatabase.getInstance(getContext());
 
         // list for database songs
-        ArrayList<Playlist> listPlaylist = (ArrayList<Playlist>) pdb.playlistDao().getAllPlaylists();
+        listPlaylist = (ArrayList<Playlist>) pdb.playlistDao().getAllPlaylists();
 
         // fubd
         int n = 0;
@@ -135,6 +156,70 @@ public class PlayerFragment extends Fragment {
         else { playerName.setText("No playlist"); }
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
+
+        try {
+            pViewModel = new PlayerViewModel(this);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //set databinding to MetronomeViewModel
+        playerMetronomeBinding.setPViewModel(pViewModel);
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listPlaylist.size() != 0) {
+
+                    String currentPlayer = playerName.getText().toString();
+
+                    for(int i = 0; i < listPlaylist.size(); i++)
+                    {
+                        if(Objects.equals(currentPlayer,listPlaylist.get(i).getPlaylist())){
+                            i++;
+
+                            if(i < listPlaylist.size()){
+                                List<Song> listSongs = listPlaylist.get(i).getPlaylistSongs();
+                                playerName.setText(listPlaylist.get(i).getPlaylist());
+                                setRecycleView(view, listSongs, i);
+                                break;
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        });
+
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listPlaylist.size() != 0) {
+
+                    String currentPlayer = playerName.getText().toString();
+
+                    for(int i = 0; i < listPlaylist.size(); i++)
+                    {
+                        if(Objects.equals(currentPlayer,listPlaylist.get(i).getPlaylist())){
+
+                            if(i > 0){
+                                List<Song> listSongs = listPlaylist.get(i-1).getPlaylistSongs();
+                                playerName.setText(listPlaylist.get(i-1).getPlaylist());
+                                setRecycleView(view, listSongs, i-1);
+                                break;
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        });
     }
 
     // function for receive the broadcast

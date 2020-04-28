@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.example.metronome.Demo1;
 import com.example.metronome.MainActivity;
 import com.example.metronome.R;
 import com.example.metronome.bluetooth.BluethootActivity;
@@ -60,8 +61,10 @@ public class MetronomeFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_playlist);
+        item.setVisible(false);
+        super.onCreateOptionsMenu(menu, inflater);
 
     }
 
@@ -69,6 +72,8 @@ public class MetronomeFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_settings:
+                Intent sIntent = new Intent(getActivity(), Demo1.class);
+                this.startActivity(sIntent);
                 return true;
             case R.id.action_save:
                 Intent intent = new Intent(getActivity(), AddSong.class);

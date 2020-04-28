@@ -3,31 +3,38 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_songlist"
+        android:id="@+id/action_playlist"
         android:icon="@drawable/ic_playlist_play_white_24dp"
         android:title="@string/action_songlist"
         android:visible="true"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_songlist"
+        android:icon="@drawable/ic_audiotrack"
+        android:title="@string/action_songlist"
+        android:visible="true"
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_save"
         android:icon="@drawable/ic_save_white_24dp"
         android:title="@string/action_save"
         android:visible="true"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings_white_24dp"
         android:title="@string/action_settings"
         android:visible="true"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_bluetooth"
         android:icon="@drawable/ic_bluetooth_white_24dp"
         android:title="@string/action_bluetooth"
         android:visible="true"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="always"/>
 
 </menu>

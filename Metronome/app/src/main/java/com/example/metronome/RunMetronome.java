@@ -8,6 +8,7 @@ public class RunMetronome extends TimerTask {
 
     private int mSound;
     private SoundPool soundPool;
+    public boolean firstBeat = false;
 
     public RunMetronome(SoundPool soundPool, int mSound){
         this.soundPool = soundPool;

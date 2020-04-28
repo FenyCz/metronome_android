@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.RequiresApi;
@@ -206,7 +205,7 @@ public class MetronomeViewModel extends ViewModel{
                         tapBpm = tapBpm/10;
                         tapBpm = 6000/tapBpm;
                         data.setNTouch(1);
-                        Toast.makeText(fragActivity.getActivity(), "This is my Toast message! " + data.getTimee() + ", " + tapBpm + ", " + data.getNTouch(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(fragActivity.getActivity(), "This is my Toast message! " + data.getTimee() + ", " + tapBpm + ", " + data.getNTouch(), Toast.LENGTH_LONG).show();
                         data.setBpm(Math.round(tapBpm));
                         croller.setProgress(data.getBpm());
                     }
@@ -228,22 +227,10 @@ public class MetronomeViewModel extends ViewModel{
 
             this.runMetronome = new RunMetronome(soundPool, mSound);
 
-            this.timer.schedule(this.runMetronome, 0L, data.getFreq());
+            runMetronome.firstBeat = false;
+
+            this.timer.schedule(this.runMetronome, 300, data.getFreq());
         }
-
-        /*croller = this.fragActivity.getActivity().findViewById(R.id.croller);
-        //TODO: hotovo - smazat
-
-        //circular seek bar
-        croller = getView().findViewById(R.id.croller);
-        bpmText = getView().findViewById(R.id.label);
-
-        croller.setOnProgressChangedListener(new Croller.onProgressChangedListener() {
-            @Override
-            public void onProgressChanged(int progress) {
-                bpmText.setText("" + progress, EditText.BufferType.EDITABLE);
-            }
-        });*/
     }
 
     public void buttonChangeBpm(int number){
@@ -291,53 +278,4 @@ public class MetronomeViewModel extends ViewModel{
         //soundPool.play(mSound, 1,1,0,-1, 1);
 
     }
-
-    /*public void setDefault() {
-        Croller croller = (Croller) this.fragActivity.getActivity().findViewById(R.id.croller);
-        //croller.setMax(300); //max number
-        //croller.setProgress(data.getBpm()); //default number of seek bar
-        //croller.setMin(1);
-    }*/
-
-    // TODO : odkomentovat, az budu chtit pouzivat zmenu klikani
-    // stisk tlačítka play, spustí nebo zastaví timer
-    /*public void onClickedPlayButton(boolean checked){
-        if (checked){
-            this.runTimer();
-        }
-        else {
-            this.cancelTimer();
-        }
-    }
-
-    //při kliku na tlačítko přičte nebo odečte BPM
-    public void onClickedPlus( int plus){
-        this.data.setBpm(this.data.getBpm() + plus);
-    }
-
-    //spustí timer který přehrává soundtask
-    private void runTimer() {
-        this.timerIsRunning = true;
-        this.timer = new Timer();
-
-        if (soundTask == null) {
-            Spinner spinner = this.fragActivity.getView().findViewById(R.id.croller);
-            String selected = spinner.getSelectedItem().toString();
-
-            soundTask = new SoundTask(soundPool, beatsSounds.get(selected), data.getAccentArr(), data.getCountOfBeats());
-            soundTask.register((CurrentBeatDraw) this);
-        }
-
-        this.timer.schedule(soundTask, 0L, data.getFreq());
-    }
-
-    //zastaví timer
-    public void cancelTimer(){
-        this.timerIsRunning = false;
-        this.timer.cancel();
-        this.timer.purge();
-
-        soundTask = null;
-        //this.drawAccentBar();
-    }*/
 }

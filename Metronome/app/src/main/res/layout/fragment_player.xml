@@ -7,10 +7,10 @@
 
 
 <data>
-    <import type="com.example.metronome.viewModel.MetronomeViewModel" />
+    <import type="com.example.metronome.viewModel.PlayerViewModel" />
     <variable
-        name="mViewModel"
-        type="com.example.metronome.viewModel.MetronomeViewModel"/>
+        name="pViewModel"
+        type="com.example.metronome.viewModel.PlayerViewModel"/>
 </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,6 +67,7 @@
         android:textSize="30sp"
         android:textStyle="bold"
         android:textColor="@color/primaryTextColor"
+        android:onTextChanged="@{(cs,x,y,z) -> pViewModel.textChangeBpm(cs)}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -82,10 +83,32 @@
         android:textOff=" ‎▶"
         android:textOn="■"
         android:textSize="30sp"
+        android:onClick="@{()-> pViewModel.playButtonClick()}"
         android:background="@drawable/circle_player"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_previous_playlist"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/ic_before"
+        app:layout_constraintEnd_toStartOf="@+id/button_next_playlist"
+        app:layout_constraintTop_toTopOf="@+id/player_name" />
+
+    <Button
+        android:id="@+id/button_next_playlist"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/ic_next"
+        app:layout_constraintEnd_toEndOf="@+id/player_name"
+        app:layout_constraintTop_toTopOf="@+id/player_name" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
