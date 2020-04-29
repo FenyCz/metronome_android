@@ -85,7 +85,7 @@ public class MetronomeViewModel extends ViewModel{
         //set sound of metronome
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             this.audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build();
 
@@ -97,7 +97,7 @@ public class MetronomeViewModel extends ViewModel{
             this.soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         }
 
-        mSound = soundPool.load(fragActivity.getActivity(),R.raw.wood_2,1);
+        mSound = soundPool.load(fragActivity.getActivity(),R.raw.stick,1);
 
         //accents
         final ViewGroup mainLayout = (LinearLayout)fragActivity.getActivity().findViewById(R.id.con_layout);

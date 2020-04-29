@@ -123,6 +123,7 @@ public class MetronomeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
         PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
         if (pm.isScreenOn()) {
             mViewModel.stopMetronome();
