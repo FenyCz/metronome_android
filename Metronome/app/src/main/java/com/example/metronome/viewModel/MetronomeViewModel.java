@@ -215,9 +215,14 @@ public class MetronomeViewModel extends ViewModel{
         });
     }
 
-    public void textChangeBpm(CharSequence sequence){
+    public void textChangeBpm(CharSequence s, int start, int before, int count){
         //this.label = this.fragActivity.getActivity().findViewById(R.id.label);
         //this.label.setSelection(sequence.length());
+
+        //onPause metoda vyvola onTextChangedListener
+        if(Integer.parseInt(s.toString()) == data.getBpm()){
+            return;
+        }
 
         if(this.checked){
             timer.cancel();
@@ -278,4 +283,5 @@ public class MetronomeViewModel extends ViewModel{
         //soundPool.play(mSound, 1,1,0,-1, 1);
 
     }
+
 }

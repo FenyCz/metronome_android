@@ -105,7 +105,7 @@ public class Demo1 extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                handler.post(updateVisualizer);
+                //handler.post(updateVisualizer);
                 metronomeHandler.post(updateMetronome);
 
             } else {
@@ -132,14 +132,14 @@ public class Demo1 extends AppCompatActivity {
         if (recorder != null) {
             isRecording = false; // stop recording
 
-            handler.removeCallbacks(updateVisualizer);
+            //handler.removeCallbacks(updateVisualizer);
             metronomeHandler.removeCallbacks(updateMetronome);
 
             timer.cancel();
             timer.purge();
 
-            timer1.cancel();
-            timer1.purge();
+            //timer1.cancel();
+            //timer1.purge();
 
             visualizerView.clear();
             visualizerView.beat = 55;
@@ -168,7 +168,7 @@ public class Demo1 extends AppCompatActivity {
     }
 
     // updates the visualizer every 50 milliseconds
-    Runnable updateVisualizer = new Runnable() {
+    /*Runnable updateVisualizer = new Runnable() {
         @Override
         public void run() {
             if (isRecording) // if we are already recording
@@ -202,10 +202,10 @@ public class Demo1 extends AppCompatActivity {
                             }
                         });
                     }
-                }, 0, (long) ((55300.0 / 150.0) / 10.0));
+                }, 0, (long) ((55300.0 / 150.0) / 20.0));
             }
         }
-    };
+    };*/
 
     final Runnable updateMetronome = new Runnable() {
         @Override
@@ -224,6 +224,16 @@ public class Demo1 extends AppCompatActivity {
                             public void run() {
                                 // get the current amplitude
                                 //int x = recorder.getMaxAmplitude();
+
+                                try {
+                                    x = recorder.getMaxAmplitude();
+                                } catch (Exception ignored)
+                                {
+                                    ;
+                                }
+
+                                visualizerView.addAmplitude(x); // update the VisualizeView
+                                visualizerView.invalidate(); // refresh the VisualizerView
 
                                 if (n == 5) {
                                     soundPool.play(soundId, 1, 1, 0, 0, 1);
