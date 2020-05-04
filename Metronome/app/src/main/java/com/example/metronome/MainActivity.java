@@ -1,5 +1,6 @@
 package com.example.metronome;
 
+import android.media.AudioManager;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // set media volume in whole activity
+        this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 
         // if call from songlist activity, set tempo of song, if call from playlist insert playlistname

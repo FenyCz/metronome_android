@@ -17,6 +17,16 @@ public class RunMetronome extends TimerTask {
 
     @Override
     public void run() {
-        soundPool.play(mSound, 1,1,0,0, 1);
+
+        // first time beat metronome, prevent lag
+        if(!firstBeat){
+            soundPool.play(mSound, 0,0,0,0, 1);
+            firstBeat=true;
+        }
+
+        else
+        {
+            soundPool.play(mSound, 1,1,0,0, 1);
+        }
     }
 }

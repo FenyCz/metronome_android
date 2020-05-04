@@ -1,5 +1,6 @@
 package com.example.metronome;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,6 +19,10 @@ public class VisualizerView extends View {
     private int height; // height of this View
     private Paint linePaint; // specifies line drawing characteristics
     private Paint metronomeLine;
+
+    Intersection intersection = new Intersection();
+    public int beat = 55;
+    public float clearHits = 0;
 
     // constructor
     public VisualizerView(Context context, AttributeSet attrs) {
@@ -51,6 +56,7 @@ public class VisualizerView extends View {
     }
 
     // draw the visualizer with scaled lines representing the amplitudes
+    @SuppressLint("ShowToast")
     @Override
     public void onDraw(Canvas canvas) {
         int middle = height / 2; // get the middle of the View
@@ -60,10 +66,30 @@ public class VisualizerView extends View {
         for (float power : amplitudes) {
             float scaledHeight = power / LINE_SCALE; // scale the power
             curX += LINE_WIDTH; // increase X by LINE_WIDTH
+            float upY = middle + scaledHeight / 2;
+            float downY = middle - scaledHeight / 2;
+
+            if(curX == beat){
+
+                boolean hit = intersection.compare(curX,upY, getContext());
+
+                if(hit)
+                {
+                    clearHits += 1;
+                    //Toast.makeText(getContext().getApplicationContext(),"Yes " + clearHits,Toast.LENGTH_SHORT).show();
+                }
+
+                if(beat != 880){
+                    beat += 55;
+                }
+                /*else{
+                    counter =+ 1;
+                }*/
+            }
+
 
             // draw a line representing this item in the amplitudes ArrayList
-            canvas.drawLine(curX, middle + scaledHeight / 2, curX, middle
-                    - scaledHeight / 2, linePaint);
+            canvas.drawLine(curX, upY , curX, downY , linePaint);
         }
     }
 

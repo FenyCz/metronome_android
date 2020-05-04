@@ -223,13 +223,11 @@ public class MetronomeViewModel extends ViewModel{
             timer.cancel();
             timer.purge();
 
-            this.timer = new Timer();
+            timer = new Timer();
 
-            this.runMetronome = new RunMetronome(soundPool, mSound);
+            runMetronome = new RunMetronome(soundPool, mSound);
 
-            runMetronome.firstBeat = false;
-
-            this.timer.schedule(this.runMetronome, 300, data.getFreq());
+            timer.schedule(runMetronome, 300, data.getFreq());
         }
     }
 
@@ -251,8 +249,8 @@ public class MetronomeViewModel extends ViewModel{
     public void stopSound() {
         //soundPool.release();
         //soundPool = null;
-        this.timer.cancel();
-        this.timer.purge();
+        timer.cancel();
+        timer.purge();
     }
 
     public void stopMetronome(){
@@ -269,11 +267,13 @@ public class MetronomeViewModel extends ViewModel{
 
     public void playSound(){
 
-        this.timer = new Timer();
+        timer = new Timer();
 
-        this.runMetronome = new RunMetronome(soundPool, mSound);
+        runMetronome = new RunMetronome(soundPool, mSound);
 
-        this.timer.schedule(this.runMetronome,0L, data.getFreq());
+        runMetronome.firstBeat = false;
+
+        timer.schedule(runMetronome,0L, data.getFreq());
 
         //soundPool.play(mSound, 1,1,0,-1, 1);
 
