@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sound_entries">
+        <item>Stick</item>
+        <item>Beep</item>
+        <item>Bell</item>
+        <item>Drum</item>
+        <item>Meow</item>
+    </string-array>
+</resources>

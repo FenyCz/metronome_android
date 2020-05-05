@@ -1,6 +1,7 @@
 package com.example.metronome.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.example.metronome.Demo1;
 import com.example.metronome.MainActivity;
@@ -25,7 +27,7 @@ import com.example.metronome.songdatabase.AddSong;
 import com.example.metronome.songdatabase.Songlist;
 import com.example.metronome.viewModel.MetronomeViewModel;
 
-public class MetronomeFragment extends Fragment {
+public class MetronomeFragment extends Fragment  implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     //databinding
     private FragmentMetronomeBinding fragmentMetronomeBinding;
@@ -101,6 +103,9 @@ public class MetronomeFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
         //databinding activating
         fragmentMetronomeBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_metronome,container,false);
         View view = fragmentMetronomeBinding.getRoot();
@@ -148,5 +153,14 @@ public class MetronomeFragment extends Fragment {
 
 
 
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("sound")) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String currentSound = pref.getString("sound", "");
+            mViewModel.setSound(currentSound);
+        }
     }
 }

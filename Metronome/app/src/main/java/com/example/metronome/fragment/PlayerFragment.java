@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,13 +35,14 @@ import com.example.metronome.playlistdatabase.PlaylistActivity;
 import com.example.metronome.playlistdatabase.PlaylistDatabase;
 import com.example.metronome.songdatabase.Song;
 import com.example.metronome.viewModel.PlayerViewModel;
+import com.example.metronome.viewModel.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 
-public class PlayerFragment extends Fragment {
+public class PlayerFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private RecyclerView mRecycleView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -86,6 +89,8 @@ public class PlayerFragment extends Fragment {
         switch (item.getItemId()) {
 
             case R.id.action_settings:
+                Intent sIntent = new Intent(getActivity(), SettingsActivity.class);
+                this.startActivity(sIntent);
                 return true;
             case R.id.action_bluetooth:
                 Intent bIntent = new Intent(getActivity(), BluethootActivity.class);
@@ -104,7 +109,9 @@ public class PlayerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         //databinding activating
         playerMetronomeBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_player,container,false);
@@ -238,5 +245,14 @@ public class PlayerFragment extends Fragment {
         mAdapter = new PlayerFragmentAdapter(listSongs, view.getContext());
         mRecycleView.setAdapter(mAdapter);
 
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("sound")) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String currentSound = pref.getString("sound", "");
+            pViewModel.setSound(currentSound);
+        }
     }
 }

@@ -60,4 +60,6 @@ dependencies {
     //Slider - https://github.com/r0adkll/Slidr
     implementation 'com.r0adkll:slidableactivity:2.1.0'
 
+    implementation "androidx.preference:preference:1.1.1"
+
 }

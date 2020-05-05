@@ -1,6 +1,7 @@
 package com.example.metronome.viewModel;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -21,6 +22,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
+import androidx.preference.PreferenceManager;
 
 import com.example.metronome.R;
 import com.example.metronome.RunMetronome;
@@ -97,7 +99,10 @@ public class MetronomeViewModel extends ViewModel{
             this.soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         }
 
-        mSound = soundPool.load(fragActivity.getActivity(),R.raw.stick,1);
+        // set current sound from settings
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(fragActivity.getContext());
+        String currentSound = pref.getString("sound", "");
+        setSound(currentSound);
 
         //accents
         final ViewGroup mainLayout = (LinearLayout)fragActivity.getActivity().findViewById(R.id.con_layout);
@@ -206,8 +211,8 @@ public class MetronomeViewModel extends ViewModel{
                         tapBpm = 6000/tapBpm;
                         data.setNTouch(1);
                         //Toast.makeText(fragActivity.getActivity(), "This is my Toast message! " + data.getTimee() + ", " + tapBpm + ", " + data.getNTouch(), Toast.LENGTH_LONG).show();
-                        data.setBpm(Math.round(tapBpm));
-                        croller.setProgress(data.getBpm());
+                        //data.setBpm(Math.round(tapBpm));
+                        croller.setProgress(Math.round(tapBpm));
                     }
                 }
             return true;
@@ -224,6 +229,8 @@ public class MetronomeViewModel extends ViewModel{
             return;
         }
 
+        data.setBpm(Integer.parseInt(s.toString()));
+
         if(this.checked){
             timer.cancel();
             timer.purge();
@@ -237,8 +244,8 @@ public class MetronomeViewModel extends ViewModel{
     }
 
     public void buttonChangeBpm(int number){
-        this.data.setBpm(this.data.getBpm() + number);
-        croller.setProgress(this.data.getBpm());
+        croller.setProgress(data.getBpm() + number);
+        //data.setBpm(data.getBpm() + number);
     }
 
     public void playButtonClick(){
@@ -284,4 +291,27 @@ public class MetronomeViewModel extends ViewModel{
 
     }
 
+    public void setSound(String key) {
+
+        if(key.equals("Stick")){
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.stick,1);
+        }
+
+        else if(key.equals("Meow")){
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.meow,1);
+        }
+
+        else if(key.equals("Beep")){
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.beep4,1);
+        }
+
+        else if(key.equals("Drum")){
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.drum1,1);
+        }
+
+        else if(key.equals("Bell")){
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.bell2,1);
+        }
+
+    }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="Stick"
+        android:dialogTitle="Metronome Sound"
+        android:entries="@array/sound_entries"
+        android:entryValues="@array/sound_entries"
+        android:key="sound"
+        android:summary="Choose sound of metronome"
+        android:title="Metronome Sound" />
+
+</PreferenceScreen>

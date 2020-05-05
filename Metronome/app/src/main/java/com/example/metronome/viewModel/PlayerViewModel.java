@@ -1,5 +1,6 @@
 package com.example.metronome.viewModel;
 
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -8,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ToggleButton;
 
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.example.metronome.R;
 import com.example.metronome.RunMetronome;
@@ -48,7 +50,10 @@ public class PlayerViewModel {
             this.soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         }
 
-        mSound = soundPool.load(fragActivity.getActivity(),R.raw.stick,1);
+        // set current sound from settings
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(fragActivity.getContext());
+        String currentSound = pref.getString("sound", "");
+        setSound(currentSound);
     }
 
     public void playButtonClick(){
@@ -108,5 +113,29 @@ public class PlayerViewModel {
 
             this.timer.schedule(this.runMetronome, 0L, 60000/Integer.parseInt(tempo.getText().toString()));
         }
+    }
+
+    public void setSound(String key) {
+
+        if(key.equals("Stick")){
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.stick,1);
+        }
+
+        else if(key.equals("Meow")){
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.meow,1);
+        }
+
+        else if(key.equals("Beep")){
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.beep4,1);
+        }
+
+        else if(key.equals("Drum")){
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.drum1,1);
+        }
+
+        else if(key.equals("Bell")){
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.bell2,1);
+        }
+
     }
 }
