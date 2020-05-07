@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="oval">
             <solid android:color="@color/secondaryDarkColor"/>
-            <size android:width="60dp" android:height="60dp"/>
+            <size android:width="80dp" android:height="80dp" />
             <stroke
-                android:width="4dp"
+                android:width="20dp"
+                android:color="@color/colorPrimaryDark"/>
+        </shape>
+    </item>
+    <item android:top="20dp" android:bottom="20dp" android:left="20dp" android:right="20dp">
+        <shape android:shape="oval">
+            <solid android:color="@color/secondaryDarkColor"/>
+            <stroke
+                android:width="3dp"
                 android:color="@color/primaryTextColor"/>
         </shape>
     </item>
-</selector>
+</layer-list>

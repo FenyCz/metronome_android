@@ -162,5 +162,20 @@ public class MetronomeFragment extends Fragment  implements SharedPreferences.On
             String currentSound = pref.getString("sound", "");
             mViewModel.setSound(currentSound);
         }
+
+        else if (key.equals("increase_tempo")) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            mViewModel.increase = pref.getBoolean("increase_tempo", false);
+        }
+
+        else if (key.equals("bpm")) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            mViewModel.increaseBpm = pref.getString("bpm", "");
+        }
+
+        else if (key.equals("bar")) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            mViewModel.increaseBar = pref.getString("bar", "");
+        }
     }
 }

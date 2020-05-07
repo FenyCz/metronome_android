@@ -2,9 +2,7 @@ package com.example.metronome.viewModel;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.view.MotionEvent;
@@ -17,6 +15,7 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.annotation.RequiresApi;
@@ -30,18 +29,21 @@ import com.example.metronome.model.Model;
 import com.sdsmdg.harjot.crollerTest.Croller;
 
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Timer;
 
 public class MetronomeViewModel extends ViewModel{
 
 
+    public Boolean increase;
+    public String increaseBpm;
+    public String increaseBar;
+    private TextView bar;
     public Model data;
     private Fragment fragActivity;
     private SoundPool soundPool;
     private AudioAttributes audioAttributes;
     private int mSound;
-    private Timer timer;
+    public Timer timer;
     private boolean timerIsRunning = false;
 
     public ToggleButton tb;
@@ -58,6 +60,9 @@ public class MetronomeViewModel extends ViewModel{
     private HashMap<String, int[]> beatsSounds = null;
 
     private RunMetronome runMetronome = null;
+
+    private ViewGroup accentsViewGroup;
+    private int accentsNumber;
 
     @SuppressLint("ClickableViewAccessibility")
     public MetronomeViewModel(Fragment activity, Model model) throws IllegalAccessException {
@@ -85,24 +90,25 @@ public class MetronomeViewModel extends ViewModel{
         });
 
         //set sound of metronome
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            this.audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .build();
+        this.audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build();
 
-            this.soundPool = new SoundPool.Builder()
-                    .setMaxStreams(1)
-                    .setAudioAttributes(audioAttributes)
-                    .build();
-        }else {
-            this.soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-        }
+        this.soundPool = new SoundPool.Builder()
+                .setMaxStreams(1)
+                .setAudioAttributes(audioAttributes)
+                .build();
 
         // set current sound from settings
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(fragActivity.getContext());
         String currentSound = pref.getString("sound", "");
         setSound(currentSound);
+
+        // get data from shared preferences
+        increase = pref.getBoolean("increase_tempo", false);
+        increaseBpm = pref.getString("bpm", "");
+        increaseBar = pref.getString("bar", "");
 
         //accents
         final ViewGroup mainLayout = (LinearLayout)fragActivity.getActivity().findViewById(R.id.con_layout);
@@ -110,7 +116,7 @@ public class MetronomeViewModel extends ViewModel{
         //set accent spinner
         accentSpinner = this.fragActivity.getActivity().findViewById(R.id.accent_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.fragActivity.getActivity().getApplicationContext(),
-                R.array.accents_array, android.R.layout.simple_spinner_item);
+                R.array.accents_array, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         accentSpinner.setAdapter(adapter);
         accentSpinner.setSelection(3);
@@ -119,6 +125,9 @@ public class MetronomeViewModel extends ViewModel{
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                stopMetronome();
+
                 switch(position){
                     case 0:
                         setNumAccent(1,mainLayout);
@@ -131,6 +140,18 @@ public class MetronomeViewModel extends ViewModel{
                         break;
                     case 3:
                         setNumAccent(4,mainLayout);
+                        break;
+                    case 4:
+                        setNumAccent(5,mainLayout);
+                        break;
+                    case 5:
+                        setNumAccent(6,mainLayout);
+                        break;
+                    case 6:
+                        setNumAccent(7,mainLayout);
+                        break;
+                    case 7:
+                        setNumAccent(8,mainLayout);
                         break;
                 }
             }
@@ -159,33 +180,19 @@ public class MetronomeViewModel extends ViewModel{
         spinner.setAdapter(spinnerArrayAdapter);
 
         spinner.setSelection(getIndex(spinner,this.data.getSoundName()));*/
+
+        bar = fragActivity.getActivity().findViewById(R.id.text_view_bar);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setNumAccent(int numAccents, ViewGroup main){
         main.removeAllViews();
         for(int i = 0 ; i < numAccents ; i++){
-            final View accent1 = View.inflate(Objects.requireNonNull(fragActivity.getActivity()).getApplicationContext(), R.layout.accents, null);
+            final View accent1 = View.inflate(fragActivity.requireActivity().getApplicationContext(), R.layout.accents, null);
 
-            final Drawable ac1 = fragActivity.getActivity().getDrawable(R.drawable.circle_accent);
-            final Drawable ac2 = fragActivity.getActivity().getDrawable(R.drawable.circle_accent_default);
-
-            View view = accent1.findViewById(R.id.accent);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(!data.getAccent()){
-                        v.setBackground(ac1);
-                        data.setAccent(true);}
-                    else{
-                        v.setBackground(ac2);
-                        data.setAccent(false);
-                    }
-                }
-            });
             main.addView(accent1);
+            accentsViewGroup = main;
+            accentsNumber = numAccents;
         }
     }
 
@@ -220,6 +227,7 @@ public class MetronomeViewModel extends ViewModel{
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void textChangeBpm(CharSequence s, int start, int before, int count){
         //this.label = this.fragActivity.getActivity().findViewById(R.id.label);
         //this.label.setSelection(sequence.length());
@@ -235,9 +243,13 @@ public class MetronomeViewModel extends ViewModel{
             timer.cancel();
             timer.purge();
 
+            for(int i = 0; i < accentsNumber; i++){
+                accentsViewGroup.getChildAt(i).setForeground(null);
+            }
+
             timer = new Timer();
 
-            runMetronome = new RunMetronome(soundPool, mSound);
+            runMetronome = new RunMetronome(soundPool, mSound, accentsViewGroup, fragActivity, accentsNumber , increase, increaseBar, increaseBpm, this);
 
             timer.schedule(runMetronome, 300, data.getFreq());
         }
@@ -261,10 +273,18 @@ public class MetronomeViewModel extends ViewModel{
     public void stopSound() {
         //soundPool.release();
         //soundPool = null;
+
+        //change color of accents
+        for(int i = 0; i < accentsNumber; i++){
+            accentsViewGroup.getChildAt(i).setForeground(null);
+        }
+        bar.setText("");
+
         timer.cancel();
         timer.purge();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void stopMetronome(){
         if(checked) {
             checked = false;
@@ -277,11 +297,12 @@ public class MetronomeViewModel extends ViewModel{
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void playSound(){
 
         timer = new Timer();
 
-        runMetronome = new RunMetronome(soundPool, mSound);
+        runMetronome = new RunMetronome(soundPool, mSound, accentsViewGroup, fragActivity, accentsNumber, increase, increaseBar, increaseBpm, this);
 
         runMetronome.firstBeat = false;
 
@@ -294,7 +315,7 @@ public class MetronomeViewModel extends ViewModel{
     public void setSound(String key) {
 
         if(key.equals("Stick")){
-            mSound = soundPool.load(fragActivity.getActivity(),R.raw.stick,1);
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.stick3,1);
         }
 
         else if(key.equals("Meow")){

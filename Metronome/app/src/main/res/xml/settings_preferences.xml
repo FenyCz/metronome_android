@@ -1,13 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ListPreference
-        android:defaultValue="Stick"
-        android:dialogTitle="Metronome Sound"
-        android:entries="@array/sound_entries"
-        android:entryValues="@array/sound_entries"
-        android:key="sound"
-        android:summary="Choose sound of metronome"
-        android:title="Metronome Sound" />
+    <PreferenceCategory android:title="Sound">
+        <ListPreference
+            android:defaultValue="Stick"
+            android:dialogTitle="Metronome Sound"
+            android:entries="@array/sound_entries"
+            android:entryValues="@array/sound_entries"
+            android:key="sound"
+            android:summary="%s"
+            android:title="Metronome Sound" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Increase metronome tempo">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="increase_tempo"
+            android:title="Increase tempo" />
+
+        <EditTextPreference
+            android:defaultValue="5"
+            android:key="bpm"
+            android:dependency="increase_tempo"
+            app:useSimpleSummaryProvider="true"
+            android:title="Increase BPM" />
+
+        <EditTextPreference
+            android:defaultValue="1"
+            android:key="bar"
+            android:dependency="increase_tempo"
+            app:useSimpleSummaryProvider="true"
+            android:title="Increase bar" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
