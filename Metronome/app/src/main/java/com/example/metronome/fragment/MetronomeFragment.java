@@ -17,7 +17,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
-import com.example.metronome.Demo1;
+import com.example.metronome.trainer.Trainer;
 import com.example.metronome.MainActivity;
 import com.example.metronome.R;
 import com.example.metronome.bluetooth.BluethootActivity;
@@ -26,6 +26,7 @@ import com.example.metronome.model.Model;
 import com.example.metronome.songdatabase.AddSong;
 import com.example.metronome.songdatabase.Songlist;
 import com.example.metronome.viewModel.MetronomeViewModel;
+import com.example.metronome.viewModel.SettingsActivity;
 
 public class MetronomeFragment extends Fragment  implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -74,7 +75,7 @@ public class MetronomeFragment extends Fragment  implements SharedPreferences.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_settings:
-                Intent sIntent = new Intent(getActivity(), Demo1.class);
+                Intent sIntent = new Intent(getActivity(), SettingsActivity.class);
                 this.startActivity(sIntent);
                 mViewModel.stopMetronome();
                 return true;
@@ -92,6 +93,11 @@ public class MetronomeFragment extends Fragment  implements SharedPreferences.On
             case R.id.action_bluetooth:
                 Intent bIntent = new Intent(getActivity(), BluethootActivity.class);
                 this.startActivity(bIntent);
+                mViewModel.stopMetronome();
+                return true;
+            case R.id.action_trainer:
+                Intent tIntent = new Intent(getActivity(), Trainer.class);
+                this.startActivity(tIntent);
                 mViewModel.stopMetronome();
                 return true;
             default:

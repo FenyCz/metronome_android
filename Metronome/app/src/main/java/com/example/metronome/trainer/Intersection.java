@@ -1,15 +1,15 @@
-package com.example.metronome;
+package com.example.metronome.trainer;
 
 import android.content.Context;
 
 public class Intersection {
 
-    public float beatX = 1;
+    public float beatX = 0;
     boolean first_beat = false;
 
     public boolean compare(float currentBeatX, float currentBeatY, Context context){
 
-        if (currentBeatX == 880) {
+        if (currentBeatX == 910) {
             //if (beatX == 10 || beatX == 7 || beatX == 0 || beatX == 8 || beatX == 9 ) {
 
             if(!first_beat){
@@ -17,7 +17,7 @@ public class Intersection {
                 return currentBeatY >= 800;
             }
 
-            if (beatX == 9){
+            if (beatX == 3){
                 beatX += 1;
                 return currentBeatY >= 800;
             }
@@ -27,9 +27,6 @@ public class Intersection {
                 return false;
             }
 
-                /*beatX += 1;
-                return currentBeatY >= 800;
-            }*/
             else {
                 beatX += 1;
                 return false;

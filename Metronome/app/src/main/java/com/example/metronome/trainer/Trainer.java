@@ -1,4 +1,4 @@
-package com.example.metronome;
+package com.example.metronome.trainer;
 
 import android.media.AudioManager;
 import android.media.MediaRecorder;
@@ -13,13 +13,15 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.metronome.R;
+
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
 // SOURCE: https://stackoverflow.com/questions/14295427/android-audio-recording-with-voice-level-visualization
-public class Demo1 extends AppCompatActivity {
+public class Trainer extends AppCompatActivity {
 
     public static final int REPEAT_INTERVAL = 40;
     public TextView txtRecord;
@@ -36,7 +38,8 @@ public class Demo1 extends AppCompatActivity {
 
     private Handler metronomeHandler;
 
-    int n = 0;
+    int n = 5;
+    int k = 0;
     float allHits = 0;
     private Timer timer;
     private TimerTask timerTask;
@@ -46,14 +49,15 @@ public class Demo1 extends AppCompatActivity {
 
     public TextView txtPercents;
     public TextView txtHits;
-    private Timer timer1;
+    public TextView txtCounting;
+    public int startCounting = 6;
 
     int x = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_demo1);
+        setContentView(R.layout.activity_trainer);
 
         visualizerView = findViewById(R.id.visualizer);
         metronomeView = findViewById(R.id.metronomeVisualizer);
@@ -62,6 +66,7 @@ public class Demo1 extends AppCompatActivity {
         txtRecord.setOnClickListener(recordClick);
         txtHits = findViewById(R.id.txtHits);
         txtPercents = findViewById(R.id.txtPercents);
+        txtCounting = findViewById(R.id.txtCounting);
 
         // create the Handler for visualizer update
         handler = new Handler();
@@ -83,7 +88,7 @@ public class Demo1 extends AppCompatActivity {
             if (!isRecording) {
                 // isRecording = true;
 
-                txtRecord.setText("Stop Recording");
+                txtRecord.setText("Stop");
 
                 recorder = new MediaRecorder();
 
@@ -110,15 +115,19 @@ public class Demo1 extends AppCompatActivity {
 
             } else {
 
-                txtRecord.setText("Start Recording");
+                txtRecord.setText("Start");
 
-                txtHits.setText("Hits: " + visualizerView.clearHits + " / " + allHits);
+                txtHits.setText("Hits: " + String.format("%.0f",visualizerView.clearHits) + " / " + String.format("%.0f",allHits));
 
                 float percentResult = (visualizerView.clearHits / allHits) * 100;
 
-                String myFloat = Float.toString(percentResult);
+                String myFloat = String.format("%.1f",percentResult);
 
-                txtPercents.setText("Percents: " + myFloat);
+                txtPercents.setText(myFloat + "%");
+
+                txtCounting.setText("5");
+
+                startCounting = 6;
 
                 //Toast.makeText(getApplicationContext(),visualizerView.clearHits + "/" + allHits + "- " + percentResult + "%",Toast.LENGTH_SHORT).show();
 
@@ -142,9 +151,9 @@ public class Demo1 extends AppCompatActivity {
             //timer1.purge();
 
             visualizerView.clear();
-            visualizerView.beat = 55;
+            visualizerView.beat = 30;
             visualizerView.clearHits = 0;
-            n = 0;
+            n = 5;
             visualizerView.intersection.beatX = 0;
             allHits = 0;
 
@@ -167,53 +176,13 @@ public class Demo1 extends AppCompatActivity {
         soundPool = null;
     }
 
-    // updates the visualizer every 50 milliseconds
-    /*Runnable updateVisualizer = new Runnable() {
-        @Override
-        public void run() {
-            if (isRecording) // if we are already recording
-            {
-                timer1 = new Timer();
-                timer1.scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run() {
-
-                        // get the current amplitude
-
-
-
-                        runOnUiThread(new TimerTask() {
-                            @Override
-                            public void run() {
-                                try {
-                                    x = recorder.getMaxAmplitude();
-                                } catch (Exception ignored)
-                                {
-                                    ;
-                                }
-
-                                visualizerView.addAmplitude(x); // update the VisualizeView
-                                visualizerView.invalidate(); // refresh the VisualizerView
-
-                                // update in 40 milliseconds
-                                //handler.postDelayed(this, (54100/260)/10);
-                                //handler.postDelayed(this, (long) ((55300.0/120.0)/10.0));
-
-                            }
-                        });
-                    }
-                }, 0, (long) ((55300.0 / 150.0) / 20.0));
-            }
-        }
-    };*/
-
     final Runnable updateMetronome = new Runnable() {
         @Override
         public void run() {
             if (isRecording) // if we are already recording
             {
 
-                txtPercents.setText("Percents:");
+                txtPercents.setText("");
                 timer = new Timer();
                 timer.scheduleAtFixedRate(new TimerTask() {
                     @Override
@@ -222,59 +191,64 @@ public class Demo1 extends AppCompatActivity {
                         runOnUiThread(new TimerTask() {
                             @Override
                             public void run() {
+
+                                // start of countdown
+                                if(startCounting != 0){
+
+                                    if(k == 10){
+                                        startCounting--;
+                                        k=0;
+                                        if(startCounting != 0) {
+                                            soundPool.play(soundId, 1, 1, 0, 0, 1);
+                                            txtCounting.setText(String.valueOf(startCounting));
+                                        }
+                                    }
+
+                                    else {
+                                        k++;
+                                    }
+                                }
+
                                 // get the current amplitude
                                 //int x = recorder.getMaxAmplitude();
 
-                                try {
-                                    x = recorder.getMaxAmplitude();
-                                } catch (Exception ignored)
-                                {
-                                    ;
-                                }
+                                // start scanning hits
+                                else {
 
-                                visualizerView.addAmplitude(x); // update the VisualizeView
-                                visualizerView.invalidate(); // refresh the VisualizerView
+                                    txtCounting.setText("");
 
-                                if (n == 5) {
-                                    soundPool.play(soundId, 1, 1, 0, 0, 1);
-                                }
+                                    try {
+                                        x = recorder.getMaxAmplitude();
+                                    } catch (Exception ignored) {
+                                        ;
+                                    }
 
-                                if (n == 10) {
-                                    metronomeView.addAmplitude(40000); // update the VisualizeView
-                                    metronomeView.invalidate(); // refresh the VisualizerView
+                                    visualizerView.addAmplitude(x); // update the VisualizeView
+                                    visualizerView.invalidate(); // refresh the VisualizerView
 
-                                    n = 0;
-                                    allHits += 1;
-                                    txtHits.setText("Hits: " + String.format("%.0f",visualizerView.clearHits) + " / " + String.format("%.0f",allHits));
-                                } else {
-                                    metronomeView.addAmplitude(0);
-                                    metronomeView.invalidate(); // refresh the VisualizerView
-                                    n++;
+                                    if (n == 5) {
+                                        soundPool.play(soundId, 1, 1, 0, 0, 1);
+                                    }
+
+                                    if (n == 10) {
+                                        metronomeView.addAmplitude(40000); // update the VisualizeView
+                                        metronomeView.invalidate(); // refresh the VisualizerView
+
+                                        n = 0;
+                                        allHits += 1;
+                                        txtHits.setText("Hits: " + String.format("%.0f", visualizerView.clearHits) + " / " + String.format("%.0f", allHits));
+                                    }
+
+                                    else {
+                                        metronomeView.addAmplitude(0);
+                                        metronomeView.invalidate(); // refresh the VisualizerView
+                                        n++;
+                                    }
                                 }
                             }
                         });
                     }
                 }, 0, (long) ((55300.0/150.0)/10.0));
-
-
-                // update in 40 milliseconds
-                //handler.postDelayed(this,(54100/260)/10);
-
-                // MY SOLUTION
-
-                /*timer = new Timer();
-                timerTask = new TimerTask() {
-                    @Override
-                    public void run() {
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                metronomeView.invalidate();
-                            }
-                        };
-                    }
-                };
-                timer.schedule(timerTask, 0, 60000 / 120);*/
             }
         }
     };

@@ -7,7 +7,35 @@
     android:layout_alignParentBottom="true"
     android:background="@color/colorPrimaryDark" >
 
-    <com.example.metronome.MetronomeView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/secondaryLightColor"
+        android:elevation="3dp">
+
+        <TextView
+            android:id="@+id/txtHits"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Hits: "
+            android:textColor="@color/primaryTextColor"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/txtPercents"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="48dp"
+            android:text=""
+            android:textColor="@color/primaryTextColor"
+            android:textSize="25sp" />
+
+    </RelativeLayout>
+
+    <com.example.metronome.trainer.MetronomeView
         android:id="@+id/metronomeVisualizer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,7 +45,7 @@
         android:layout_marginStart="50dp"
         tools:layout_editor_absoluteX="5dp" />
 
-    <com.example.metronome.VisualizerView
+    <com.example.metronome.trainer.VisualizerView
         android:id="@+id/visualizer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,13 +58,14 @@
 
     <TextView
         android:id="@+id/txtRecord"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
         android:gravity="center"
-        android:text="Start Recording"
+        android:text="Start"
+        android:background="@drawable/circle_button_fragment"
         android:textColor="@android:color/white"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,23 +73,15 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/txtHits"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:id="@+id/txtCounting"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="Hits: "
+        android:layout_centerVertical="true"
+        android:text="5"
+        android:gravity="center"
         android:textColor="@color/primaryTextColor"
-        android:textSize="25sp" />
+        android:textSize="70sp" />
 
-    <TextView
-        android:id="@+id/txtPercents"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
-        android:text="Percents: "
-        android:textColor="@color/primaryTextColor"
-        android:textSize="25sp" />
 
 </RelativeLayout>

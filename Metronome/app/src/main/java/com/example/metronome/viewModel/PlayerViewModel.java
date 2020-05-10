@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
 import com.example.metronome.R;
-import com.example.metronome.RunMetronome;
+import com.example.metronome.RunPlayer;
 
 import java.util.Timer;
 
@@ -23,7 +23,7 @@ public class PlayerViewModel {
     private AudioAttributes audioAttributes;
     private boolean checked = false;
     private Timer timer;
-    private RunMetronome runMetronome = null;
+    private RunPlayer runPlayer;
     private ToggleButton tb;
     private EditText tempo;
     private int mSound;
@@ -87,11 +87,11 @@ public class PlayerViewModel {
 
     public void playSound(){
 
-        this.timer = new Timer();
+        timer = new Timer();
 
-        this.runMetronome = new RunMetronome(soundPool, mSound);
+        runPlayer = new RunPlayer(soundPool, mSound);
 
-        this.timer.schedule(this.runMetronome,0L, 60000/Integer.parseInt(tempo.getText().toString()));
+        timer.schedule(runPlayer,0L, 60000/Integer.parseInt(tempo.getText().toString()));
 
         //soundPool.play(mSound, 1,1,0,-1, 1);
 
@@ -105,13 +105,13 @@ public class PlayerViewModel {
             timer.cancel();
             timer.purge();
 
-            this.timer = new Timer();
+            timer = new Timer();
 
-            this.runMetronome = new RunMetronome(soundPool, mSound);
+            runPlayer = new RunPlayer(soundPool, mSound);
 
-            runMetronome.firstBeat = false;
+            runPlayer.firstBeat = false;
 
-            this.timer.schedule(this.runMetronome, 0L, 60000/Integer.parseInt(tempo.getText().toString()));
+            timer.schedule(runPlayer, 0L, 60000/Integer.parseInt(tempo.getText().toString()));
         }
     }
 

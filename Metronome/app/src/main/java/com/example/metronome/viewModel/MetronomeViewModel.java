@@ -315,7 +315,7 @@ public class MetronomeViewModel extends ViewModel{
     public void setSound(String key) {
 
         if(key.equals("Stick")){
-            mSound = soundPool.load(fragActivity.getActivity(),R.raw.stick3,1);
+            mSound = soundPool.load(fragActivity.getActivity(),R.raw.wood_1,1);
         }
 
         else if(key.equals("Meow")){

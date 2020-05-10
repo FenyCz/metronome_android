@@ -1,12 +1,15 @@
-package com.example.metronome;
+package com.example.metronome.trainer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.core.content.ContextCompat;
+
+import com.example.metronome.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +24,16 @@ public class VisualizerView extends View {
     private Paint metronomeLine;
 
     Intersection intersection = new Intersection();
-    public int beat = 55;
+    public int beat = 30;
     public float clearHits = 0;
+
+    int color = ContextCompat.getColor(getContext(), R.color.secondaryLightColor);
 
     // constructor
     public VisualizerView(Context context, AttributeSet attrs) {
         super(context, attrs); // call superclass constructor
         linePaint = new Paint(); // create Paint for lines
-        linePaint.setColor(Color.RED); // set color to green
+        linePaint.setColor(color); // set color to orange
         linePaint.setStrokeWidth(LINE_WIDTH); // set stroke width
     }
 
@@ -79,12 +84,9 @@ public class VisualizerView extends View {
                     //Toast.makeText(getContext().getApplicationContext(),"Yes " + clearHits,Toast.LENGTH_SHORT).show();
                 }
 
-                if(beat != 880){
+                if(beat != 910){
                     beat += 55;
                 }
-                /*else{
-                    counter =+ 1;
-                }*/
             }
 
 
