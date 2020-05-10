@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/home/xpomkl00/AndroidStudioProjects/metronome_android/Metronome/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_player.xml",
+        "source": "/home/xpomkl00/AndroidStudioProjects/metronome_android/Metronome/app/src/main/res/layout/fragment_player.xml"
+    },
+    {
+        "merged": "/home/xpomkl00/AndroidStudioProjects/metronome_android/Metronome/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_metronome.xml",
+        "source": "/home/xpomkl00/AndroidStudioProjects/metronome_android/Metronome/app/src/main/res/layout/fragment_metronome.xml"
+    }
+]
